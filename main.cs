@@ -26,7 +26,7 @@ namespace test
                 Dateiname = jahr.Insert(4, ".txt");
                 jahr = Dateiname;
                 Dateiname = jahr.Insert(0, "Kalender");
-                FileInfo f = new FileInfo(Dateiname); //Text Datei anlegen 
+                FileInfo f = new FileInfo("kalenderausgabe/"+Dateiname); //Text Datei anlegen 
                 StreamWriter w = f.CreateText();
 
                 w.Write("Kalender fuer das Jahr "); //Jahr in die Datei schreiben
