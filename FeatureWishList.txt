@@ -1,6 +1,6 @@
 * Ausgabe soll immer mit "MO" beginnen, "1" rückt entsprechend ein
-* refactoring: Ausgabe in eigene Einheit ziehen
 * refactoring: keine code duplication bei Ausgabe in Datei und Console
+* im code prüfen, ob ausgabeverheichnis schon existiert, wenn nicht im code erzeugen, sodass das Programm nicht mehr abstürzt
 
 
 später
