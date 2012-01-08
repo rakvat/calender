@@ -10,9 +10,8 @@ namespace KalenderWelt
         public static void gibAus(int dasJahr)
         {
             int monat = 1, tag = 1;
-            int wochentag = 0, jahre = 0, schaltjahr = 0, versatz = 0;
+            int wochentag = 0, jahre = 0, versatz = 0;
             int[] monate = new int[12] { 0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5 };
-            int[] tage = new int[12] { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
             string jahr = Convert.ToString(dasJahr);
             string Dateiname;
@@ -30,59 +29,18 @@ namespace KalenderWelt
             for (monat = 1; monat < 13; monat++)
             {
 
-                switch (monat)//Gibt den Namen des Monats aus
-                {
-                    case 1: Console.WriteLine("      Januar"); //auf Bildschirm ausgeben
-                        w.WriteLine("      Januar"); //in Datei schreiben
-                        break;
-                    case 2: Console.WriteLine("      Februar"); //auf Bildschirm ausgeben
-                        w.WriteLine("      Februar"); //in Datei schreiben
-                        break;
-                    case 3: Console.WriteLine("      Maerz"); //auf Bildschirm ausgeben
-                        w.WriteLine("      Maerz"); //in Datei schreiben
-                        break;
-                    case 4: Console.WriteLine("      April"); //auf Bildschirm ausgeben
-                        w.WriteLine("      April"); //in Datei schreiben
-                        break;
-                    case 5: Console.WriteLine("      Mai"); //auf Bildschirm ausgeben
-                        w.WriteLine("      Mai"); //in Datei schreiben
-                        break;
-                    case 6: Console.WriteLine("      Juni"); //auf Bildschirm ausgeben
-                        w.WriteLine("      Juni"); //in Datei schreiben
-                        break;
-                    case 7: Console.WriteLine("      Juli"); //auf Bildschirm ausgeben
-                        w.WriteLine("      Juli"); //in Datei schreiben
-                        break;
-                    case 8: Console.WriteLine("      August"); //auf Bildschirm ausgeben
-                        w.WriteLine("      August"); //in Datei schreiben
-                        break;
-                    case 9: Console.WriteLine("      September"); //auf Bildschirm ausgeben
-                        w.WriteLine("      September"); //in Datei schreiben
-                        break;
-                    case 10: Console.WriteLine("      Oktober"); //auf Bildschirm ausgeben
-                        w.WriteLine("      Oktober"); //in Datei schreiben
-                        break;
-                    case 11: Console.WriteLine("      November"); //auf Bildschirm ausgeben
-                        w.WriteLine("      November"); //in Datei schreiben
-                        break;
-                    case 12: Console.WriteLine("      Dezember"); //auf Bildschirm ausgeben
-                        w.WriteLine("      Dezember"); //in Datei schreiben
-                        break;
-                    default: Console.WriteLine("Falsche Eingabe. Nur 1 bis 12 erlaubt."); //auf Bildschirm ausgeben
-                        w.WriteLine("Falsche Eingabe. Nur 1 bis 12 erlaubt."); //in Datei schreiben     
-                        break;
-                }//Ende switch Monatsname
+                Console.WriteLine("      " + HilfsKonstrukte.monatsNamen[monat - 1]); //auf Bildschirm ausgeben
+                w.WriteLine("      " + HilfsKonstrukte.monatsNamen[monat - 1]); //in Datei schreiben
 
                 if (dasJahr >= 1900) jahre = dasJahr - 1900;
                 else jahre = 1900 - dasJahr;
-                schaltjahr = jahre / 4;
-                versatz = jahre + schaltjahr;
+                versatz = jahre + jahre / 4;
                 versatz = versatz + monate[monat - 1];
 
-                if (((dasJahr % 4 == 0) && (!(dasJahr % 100 == 0))) || ((dasJahr % 100 == 0) && (dasJahr % 400 == 0)))
+                if (HilfsKonstrukte.istSchaltJahr(dasJahr))
                 {
                     versatz--;
-                    tage[1] = 29; //Februar Feld im Arrey bei Schaltjahren auf 29 setzen
+                    HilfsKonstrukte.tageImMonat[1] = 29; //Februar Feld im Arrey bei Schaltjahren auf 29 setzen
                 }
 
                 wochentag = versatz % 7;
@@ -112,7 +70,7 @@ namespace KalenderWelt
                         break;
                 } //Ende switch Wochentag auswahl
 
-                for (tag = 1; tag <= tage[monat - 1]; tag++) //solange Zähler kleiner gleich Wert aus Arrey Tage 
+                for (tag = 1; tag <= HilfsKonstrukte.tageImMonat[monat - 1]; tag++) //solange Zähler kleiner gleich Wert aus Arrey Tage 
                 {
                     Console.Write(tag); //auf Bildschirm ausgeben
                     if (tag < 10) Console.Write("  ");
