@@ -1,7 +1,7 @@
-all: calender.exe 
+all: kalender.exe 
 
-calender.exe: main.cs
-	gmcs main.cs
+kalender.exe: main.cs ausgabe.cs
+	gmcs main.cs ausgabe.cs -out:kalender.exe
 
 clean:
 	rm -f *.exe
