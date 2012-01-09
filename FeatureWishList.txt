@@ -1,7 +1,10 @@
 ﻿* Christoph1717: Ausgabe Bug bei Schaltjahren suchen
+* bug: ausgabe 2012/Oktober:
+    MO DI MI DO FR SA SO
+                         1  
+    2  3  4  5  6  7  8  
+    9  10 11 12 13 14 15 
 * refactoring: keine code duplication bei Ausgabe in Datei und Console
-* im code prüfen, ob Ausgabeverheichnis schon existiert, wenn nicht im code erzeugen, 
-  sodass das Programm nicht mehr abstürzt
 
 
 später

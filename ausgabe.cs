@@ -18,8 +18,9 @@ namespace KalenderWelt
             Dateiname = jahr.Insert(4, ".txt");
             jahr = Dateiname;
             Dateiname = jahr.Insert(0, "Kalender");
-            if (System.IO.Directory.Exists("kalenderausgabe/")) Console.WriteLine("Ordner gefunden"); //keine leere Anweisung erwünscht
-            else Directory.CreateDirectory("kalenderausgabe"); //anlegen der Ordners wenn nicht vorhanden
+            if (!System.IO.Directory.Exists("kalenderausgabe/")) { 
+                Directory.CreateDirectory("kalenderausgabe"); //anlegen des Ordners wenn nicht vorhanden
+            }
             FileInfo f = new FileInfo("kalenderausgabe/" + Dateiname); //Text Datei anlegen 
             StreamWriter w = f.CreateText();
 
@@ -45,7 +46,7 @@ namespace KalenderWelt
                 if (HilfsKonstrukte.istSchaltJahr(dasJahr))
                 {
                     versatz--;
-                    HilfsKonstrukte.tageImMonat[1] = 29; //Februar Feld im Arrey bei Schaltjahren auf 29 setzen
+                    HilfsKonstrukte.tageImMonat[1] = 29; //Februar Feld im Array bei Schaltjahren auf 29 setzen
                 }
 
 
@@ -100,7 +101,7 @@ namespace KalenderWelt
                 }
 
 
-                for (tag = 1; tag <= HilfsKonstrukte.tageImMonat[monat - 1]; tag++) //solange Zähler kleiner gleich Wert aus Arrey Tage 
+                for (tag = 1; tag <= HilfsKonstrukte.tageImMonat[monat - 1]; tag++) //solange Zähler kleiner gleich Wert aus Array Tage 
                 {
                     Console.Write(tag); //auf Bildschirm ausgeben
                     ausgabePosition++; // ausgabePositon eins erhöhen bei jedem Tag
