@@ -18,6 +18,8 @@ namespace KalenderWelt
             Dateiname = jahr.Insert(4, ".txt");
             jahr = Dateiname;
             Dateiname = jahr.Insert(0, "Kalender");
+            if (System.IO.Directory.Exists("kalenderausgabe/")) Console.WriteLine("Ordner gefunden"); //keine leere Anweisung erwünscht
+            else Directory.CreateDirectory("kalenderausgabe"); //anlegen der Ordners wenn nicht vorhanden
             FileInfo f = new FileInfo("kalenderausgabe/" + Dateiname); //Text Datei anlegen 
             StreamWriter w = f.CreateText();
 
@@ -88,7 +90,7 @@ namespace KalenderWelt
 
                 if (HilfsKonstrukte.istSchaltJahr(dasJahr))
                 {
-                    if (monat > 2) //In Schaltjahen, ab Monat März "Ausgabe Bug" beheben
+                    if (monat > 2) //In Schaltjahen, ab Monat März "Ausgabe Bug" beheben ??? jedem Monat oder nur bei März ???
                     {
                         Console.Write("   ");
                         w.Write("   ");
