@@ -23,8 +23,8 @@ namespace KalenderWelt
         {
             int monat = 0, tag = 0; //alle Veriablen fangen jetzt mit null an, das erspart das [monat-1] im Code
             int wochentag = 0, jahre = 0, versatz = 0;
-            int[] monate = new int[12] { 0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5 };
             // Ja Fe Mä Ap Ma Ju Jl Ag Sp Ok Nv Dz, bei März versatz von 3 auf 4 ändern für Schaltjahren wie 2012
+            int[] monate = new int[12] { 0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5 };
             string jahr = Convert.ToString(dasJahr);
             string Dateiname;
             Dateiname = jahr.Insert(4, ".txt");
@@ -57,7 +57,6 @@ namespace KalenderWelt
                     monate[2] = 4; //versatz von März bei Schaltjahren korigieren, muß eins mehr sein als sonst
                 }
 
-
                 wochentag = versatz % 7; //Bestimmung des Wochentags durch die erechnete Veränderung seit 1900
 
                 //Die Woche beginnt immer Montags, nur der 1. eines Monats kann auf verschiedene Wochentage fallen. 
@@ -66,19 +65,14 @@ namespace KalenderWelt
                 //In Schaltjahen, ab Monat März "Ausgabe Bug" beheben 
                 if (HilfsKonstrukte.istSchaltJahr(dasJahr) && monat > 2)
                 {
-                    ausgabePosition++;
+                    ausgabePosition = (ausgabePosition + 1) % 7;
                 }
 
-
                 string zeile = "".PadLeft(ausgabePosition * 3);
-                for (tag = 0; tag <= HilfsKonstrukte.tageImMonat[monat]; tag++) //solange Zähler kleiner gleich Wert aus Array Tage 
+                for (tag = 1; tag <= HilfsKonstrukte.tageImMonat[monat]; tag++) //solange Zähler kleiner gleich Wert aus Array Tage 
                 {
-                    //verhindert die Ausgabe des 0. Eines Monats und beseitigt Problem mit Oktober 2012
-                    if (tag != 0)
-                    {
-                        zeile += tag.ToString().PadRight(3);
-                        ausgabePosition++;
-                    }
+                    zeile += tag.ToString().PadRight(3);
+                    ausgabePosition++;
 
                     //wenn hinterste Position erreicht Zeihlenumbruch einfügen und Bildschirm-Positionszähler zurücksetzen
                     if (ausgabePosition > 6)

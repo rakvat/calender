@@ -1,13 +1,11 @@
-﻿* Christoph1717: Ausgabe Bug bei Schaltjahren suchen
-* bug: ausgabe 2012/Oktober:
-    MO DI MI DO FR SA SO
-                         1  
-    2  3  4  5  6  7  8  
-    9  10 11 12 13 14 15 
-
-
+﻿
 später
+* refactoring: Jahre, Monate und Tage als Klassen modellieren?
 * Termin Erinnerungen
 * Geburtstage und Spezialtage
 * Bessere Platzaufteilung: Mehere Monate nebeneinander 
   mit Console.SetCursorPosition(x, y); oder so ? 
+* andere Ausgabeformate z.B.
+** latex
+** html
+** xml
