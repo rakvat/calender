@@ -16,7 +16,8 @@ namespace KalenderWelt
             if ((eingabejahr < 1583) || (eingabejahr > 4000)) Console.WriteLine("Falsche Eingabe. Jahr nicht im gueltigen Bereich.");
             else
             {
-                DateiUndKonsolenAusgabe.gibAus(eingabejahr);
+                DateiUndKonsolenAusgabe ausgabe = new DateiUndKonsolenAusgabe();
+                ausgabe.gibAus(eingabejahr);
             } //ende if Eingabe gültig
             Console.ReadLine();
             return 0;

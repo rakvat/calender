@@ -7,10 +7,20 @@ namespace KalenderWelt
     class DateiUndKonsolenAusgabe
     {
 
-        public static void gibAus(int dasJahr)
+        private StreamWriter _streamWriter;
+
+        public void gibZeileAus() {
+            gibZeileAus("");
+        }
+        public void gibZeileAus(string dieZeile) {
+            _streamWriter.WriteLine(dieZeile);
+            Console.WriteLine(dieZeile);
+        }
+
+        public void gibAus(int dasJahr)
         {
             int monat = 1, tag = 1;
-            int wochentag = 0, jahre = 0, versatz = 0, ausgabePosition = 0, dateiPosition = 0;
+            int wochentag = 0, jahre = 0, versatz = 0;
             int[] monate = new int[12] { 0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5 };
 
             string jahr = Convert.ToString(dasJahr);
@@ -22,21 +32,15 @@ namespace KalenderWelt
                 Directory.CreateDirectory("kalenderausgabe"); //anlegen des Ordners wenn nicht vorhanden
             }
             FileInfo f = new FileInfo("kalenderausgabe/" + Dateiname); //Text Datei anlegen 
-            StreamWriter w = f.CreateText();
+            _streamWriter = f.CreateText();
 
-            w.Write("Kalender fuer das Jahr "); //Jahr in die Datei schreiben
-            w.WriteLine(dasJahr);
-            w.WriteLine();
-            Console.WriteLine();
+            gibZeileAus("Kalender fuer das Jahr " + dasJahr);
+            gibZeileAus();
 
             for (monat = 1; monat < 13; monat++)
             {
-
-                Console.WriteLine("      " + HilfsKonstrukte.monatsNamen[monat - 1]); //auf Bildschirm ausgeben
-                w.WriteLine("      " + HilfsKonstrukte.monatsNamen[monat - 1]); //in Datei schreiben
-
-                Console.WriteLine("MO DI MI DO FR SA SO"); //auf Bildschirm ausgeben
-                w.WriteLine("MO DI MI DO FR SA SO"); //in Datei schreiben
+                gibZeileAus("      " + HilfsKonstrukte.monatsNamen[monat - 1]); 
+                gibZeileAus("MO DI MI DO FR SA SO"); 
 
                 if (dasJahr >= 1900) jahre = dasJahr - 1900;
                 else jahre = 1900 - dasJahr;
@@ -52,86 +56,38 @@ namespace KalenderWelt
 
                 wochentag = versatz % 7;
 
-                switch (wochentag)
-                {
-                    case 0:                       //Woche beginnt Montags, keine Verschiebung das ersten Tages     
-                        break;
-                    case 1: Console.Write("   "); //Woche beginnt Dienstags, ein leer Block einfügen
-                        w.Write("   ");
-                        ausgabePosition = 1;  //ausgabePosition + 1;
-                        dateiPosition = 1; //dateiPosition + 1;
-                        break;
-                    case 2: Console.Write("      "); //Woche beginnt Mittwochs, zwei leere Blöcke einfügen 
-                        w.Write("      ");
-                        ausgabePosition = 2; //ausgabePosition + 2;
-                        dateiPosition = 2;  //dateiPosition + 2;
-                        break;
-                    case 3: Console.Write("         "); //Woche beginnt Donnerstags, drei leer Blöcke einfügen
-                        w.Write("         ");
-                        ausgabePosition = 3; //ausgabePosition + 3;
-                        dateiPosition = 3;  //dateiPosition + 3;
-                        break;
-                    case 4: Console.Write("            "); //Woche beginnt Freitags, vier leer Blöcke einfügen 
-                        w.Write("            ");
-                        ausgabePosition = 4; //ausgabePosition + 4;
-                        dateiPosition = 4; //dateiPosition + 4;
-                        break;
-                    case 5: Console.Write("               "); //Woche beginnt Samstags, fünf leer Blöcke einfügen
-                        w.Write("               ");
-                        ausgabePosition = 5; //ausgabePosition + 5;
-                        dateiPosition = 5;  //dateiPosition + 5;
-                        break;
-                    case 6: Console.Write("                  "); // Woche geginnt Sonntags, sechs leere Blöcke einfügen
-                        w.Write("                  ");
-                        ausgabePosition = 6;  //ausgabePosition + 6;
-                        dateiPosition = 6;  //dateiPosition + 6;
-                        break;
-                } //Ende switch Wochentag auswahl
+                //die Woche beginnt immer Montags 
+                int ausgabePosition = wochentag;
 
-
-                if (HilfsKonstrukte.istSchaltJahr(dasJahr))
+                //In Schaltjahen, ab Monat März "Ausgabe Bug" beheben ??? jedem Monat oder nur bei März ???
+                if (HilfsKonstrukte.istSchaltJahr(dasJahr) && monat > 2) 
                 {
-                    if (monat > 2) //In Schaltjahen, ab Monat März "Ausgabe Bug" beheben ??? jedem Monat oder nur bei März ???
-                    {
-                        Console.Write("   ");
-                        w.Write("   ");
-                        ausgabePosition++;
-                        dateiPosition++;
-                    }
+                    ausgabePosition++;
                 }
 
 
+                string zeile = "".PadLeft(ausgabePosition * 3);
                 for (tag = 1; tag <= HilfsKonstrukte.tageImMonat[monat - 1]; tag++) //solange Zähler kleiner gleich Wert aus Array Tage 
                 {
-                    Console.Write(tag); //auf Bildschirm ausgeben
-                    ausgabePosition++; // ausgabePositon eins erhöhen bei jedem Tag
-                    if (tag < 10) Console.Write("  ");
-                    else Console.Write(" ");
+                    zeile += tag.ToString().PadRight(3);
+                    ausgabePosition++;
+                    //wenn hinterste Position erreicht Zeihlenumbruch einfügen und Bildschirm-Positionszähler zurücksetzen
                     if (ausgabePosition > 6)
                     {
-                        Console.WriteLine(); //wenn hinterste Position erreicht Zeihlenumbruch einfügen und Bildschirm-Positionszähler zurücksetzen
+                        gibZeileAus(zeile);
                         ausgabePosition = 0;
-                    }
-
-                    w.Write(tag); //in Datei schreiben
-                    dateiPosition++; // dateiPositon eins erhöhen bei jedem Tag
-                    if (tag < 10) w.Write("  ");
-                    else w.Write(" ");
-                    if (dateiPosition > 6)
-                    {
-                        w.WriteLine(); //wenn hinterste Position erreicht Zeihlenumbruch einfügen und Datei-Positionszähler zurücksetzen
-                        dateiPosition = 0;
+                        zeile = "";
                     }
                 }
-                Console.WriteLine(); //freie Zeilen zwischen den Monaten auf dem Bildschirm 
-                Console.WriteLine();
-
-                w.WriteLine(); //freie Zeilen zwischen den Monaten in der Datei
-                w.WriteLine();
+                if (zeile.Length > 0) {
+                    gibZeileAus(zeile);
+                }
+                //freie Zeilen zwischen den Monaten auf dem Bildschirm 
+                gibZeileAus();
 
             } //ende for Schleife Monat   
 
-            w.Close(); //Datei schliesen
+            _streamWriter.Close(); //Datei schliesen
         }
     } //ende class DateiUndKonsolenAusgabe
 } //ende namespace KalenderWelt
