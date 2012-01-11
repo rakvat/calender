@@ -1,0 +1,28 @@
+Jahr   Katja's        Christoph's   Berechnungsart    (+ heiﬂt Jahr war richtig berechnet, - Jahr war falsch berechnet)
+-----------------------------------
+2012	+		+				Vergleich mit gedrucktem Kalender       von 2010-2012
+2011	+		+				Vergleich mit http://kalender-365.de/   von 1800-2000
+2010	+		+				
+
+2000	+		+
+1999	+		+
+1901	+		+
+1900	+		+
+
+1899	+		-
+1898	+		-
+1801	+		-
+1800	+		-
+
+
+
+
+Verschiedene Eingabe Varianten:
+------------------------------------
+Zahl im g¸ltigen Bereich		+      (+ heiﬂt normaler Programm Ablauf, mit eventuell neuer Eingabe, - heiﬂt Programm Absturz)
+Zahl auserhalb des Bereichs		+
+Zahl mehrfach auserhalb des Bereichs	+
+
+Buchstanben Eingabe			+
+mehrfache Buchstaben Eingabe		+
+Abwechselend Buchstaben und Zahl	+         
