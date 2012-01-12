@@ -4,3 +4,5 @@
 *.dll
 *.sln
 kalenderausgabe
+TestResult.xml
+_builds

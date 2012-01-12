@@ -1,10 +1,19 @@
-all: kalenderlibarary.dll kalender.exe 
+all: prepare libkalender kalender libtest
 
-kalenderlibarary.dll: ausgabe.cs hilfskonstrukte.cs
-	gmcs -target:library ausgabe.cs hilfskonstrukte.cs -out:kalenderlibarary.dll
+prepare:
+	mkdir -p _builds
 
-kalender.exe: main.cs 
-	gmcs main.cs -r:kalenderlibarary.dll -out:kalender.exe
+libkalender: ausgabe.cs hilfskonstrukte.cs
+	gmcs -target:library ausgabe.cs hilfskonstrukte.cs -out:_builds/libkalender.dll
+
+kalender: main.cs 
+	gmcs main.cs -r:_builds/libkalender.dll -out:_builds/kalender.exe
+
+libtest: test.cs
+	gmcs test.cs -target:library -pkg:nunit -r:_builds/libkalender.dll -out:_builds/test.dll
+
+test:
+	nunit-console _builds/test.dll
 
 clean:
-	rm -f *.exe *.dll
+	rm -rf _builds
