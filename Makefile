@@ -1,7 +1,10 @@
-all: kalender.exe 
+all: kalenderlibarary.dll kalender.exe 
 
-kalender.exe: main.cs ausgabe.cs hilfskonstrukte.cs
-	gmcs main.cs ausgabe.cs hilfskonstrukte.cs -out:kalender.exe
+kalenderlibarary.dll: ausgabe.cs hilfskonstrukte.cs
+	gmcs -target:library ausgabe.cs hilfskonstrukte.cs -out:kalenderlibarary.dll
+
+kalender.exe: main.cs 
+	gmcs main.cs -r:kalenderlibarary.dll -out:kalender.exe
 
 clean:
-	rm -f *.exe
+	rm -f *.exe *.dll

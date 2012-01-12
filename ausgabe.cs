@@ -4,7 +4,7 @@ using System.IO;
 namespace KalenderWelt
 {
 
-    class DateiUndKonsolenAusgabe
+    public class DateiUndKonsolenAusgabe
     {
 
         private StreamWriter _streamWriter;
