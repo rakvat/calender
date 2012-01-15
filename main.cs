@@ -32,8 +32,6 @@ namespace KalenderWelt
             } //ende Eingabe Bereich Prüfung
 
             DateiUndKonsolenAusgabe ausgabe = new DateiUndKonsolenAusgabe();
-            Console.WriteLine();
-            Console.WriteLine();
             ausgabe.gibAus(eingabejahr);
             Console.ReadLine();
             return 0;
