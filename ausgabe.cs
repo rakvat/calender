@@ -4,7 +4,7 @@ using System.IO;
 namespace KalenderWelt
 {
 
-    class DateiUndKonsolenAusgabe
+    public class DateiUndKonsolenAusgabe
     {
         int woche = 0;  //zählt die Anzahl der augegeben Zeilen, dient zur Positionierung bei der zweispaltigen Ausgabe
         string auswahl; //Speichert auswahl der Benutzer: einspaltig oder zweispaltige Ausgabe
