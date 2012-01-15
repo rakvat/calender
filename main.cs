@@ -1,9 +1,9 @@
 using System;
 using System.IO;
+using System.Collections.Generic;
 
 namespace KalenderWelt
 {
-
     class KalenderErzeuger
     {
 
@@ -35,6 +35,15 @@ namespace KalenderWelt
             Console.WriteLine();
             Console.WriteLine();
             ausgabe.gibAus(eingabejahr);
+
+            //Eintrag Experimente
+            List<Eintrag> eintraege = new List<Eintrag> ();
+            eintraege.Add(new EinmaligerTermin("beruflicher Termin", new DateTime(2012,1,23)));
+            eintraege.Add(new JaehrlichesEreignisAnFestemTag("Christophs Geburtstag", 6, 30));
+            foreach (Eintrag meinEintrag in eintraege) {
+                Console.WriteLine("Eintrag: " + meinEintrag.toString());
+            }
+
             Console.ReadLine();
             return 0;
 
