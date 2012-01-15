@@ -12,6 +12,9 @@ kalender: main.cs
 libtest: test.cs
 	gmcs test.cs -target:library -pkg:nunit -r:_builds/libkalender.dll -out:_builds/test.dll
 
+start:
+	./_builds/kalender.exe
+
 test:
 	nunit-console _builds/test.dll
 

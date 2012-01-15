@@ -9,33 +9,51 @@ namespace KalenderWelt
 
         public static int Main()
         {
-            string eingabe = "";
-            int eingabejahr = 0;
+
+            int eingabejahr;
+            int eingabemodus;
 
             Console.WriteLine("Das Programm berechnet Kalender für die Jahre 1583 bis 4000");
             Console.Write("Jahr eingeben:  ");
-            eingabe = Console.ReadLine(); //erstmal als string speichern, damit auch eigegebene Buchstaben kein Problem sind
 
-            while (!int.TryParse(eingabe, out eingabejahr)) //Solange die Eingabe nicht korrekt ist wird weiter abgefragt
+            bool eingabeOk = false;
+            do
             {
-                Console.WriteLine("Falsche Eingabe, da Buchstaben nicht möglich sind.");
-                Console.Write("Bitte geben sie das Jahr erneut ein:  ");
-                eingabe = Console.ReadLine();
-            } //ende Eingabe Buchstaben Prüfung
+                string eingabe = Console.ReadLine(); //erstmal als string speichern, damit auch eigegebene Buchstaben kein Problem sind
+                if (!int.TryParse(eingabe, out eingabejahr)) {
+                    Console.WriteLine("Falsche Eingabe, da Buchstaben nicht möglich sind.");
+                } else if ((eingabejahr < 1583) || (eingabejahr > 4000)) {
+                    Console.WriteLine("Falsche Eingabe. Jahr ist nicht im gueltigen Bereich.");
+                } else {
+                    eingabeOk = true;
+                }
+                if (!eingabeOk) {
+                    Console.Write("Bitte geben sie das Jahr erneut ein:  ");
+                }
+            } while (!eingabeOk);
 
-            while ((eingabejahr < 1583) || (eingabejahr > 4000)) //Wiederhole solange bis Eingabe im gültigen Bereich ist  
+            Console.Write("Soll die Ausgabe \n1) Monatsblock einspaltig oder\n2) Monatsblock zweispaltig oder\n3) Zeilenweise sein?  ");
+            eingabeOk = false;
+            do
             {
-                Console.WriteLine("Falsche Eingabe. Jahr ist nicht im gueltigen Bereich.");
-                Console.Write("Bitte geben sie das Jahr erneut ein:  ");
-                eingabe = Console.ReadLine();
-                int.TryParse(eingabe, out eingabejahr);
-            } //ende Eingabe Bereich Prüfung
+                string eingabe = Console.ReadLine();
+                if (!int.TryParse(eingabe, out eingabemodus)) {
+                    Console.WriteLine("Falsche Eingabe, da Buchstaben nicht möglich sind.");
+                } else if ((eingabemodus < 1) || (eingabemodus > 3)) {
+                    Console.WriteLine("Falsche Eingabe. Modus ist nicht im gueltigen Bereich.");
+                } else {
+                    eingabeOk = true;
+                }
+                if (!eingabeOk) {
+                    Console.Write("Bitte geben sie den Modus erneut ein:  ");
+                }
+            } while (!eingabeOk);
+            Console.WriteLine("");
 
-            DateiUndKonsolenAusgabe ausgabe = new DateiUndKonsolenAusgabe();
-            ausgabe.gibAus(eingabejahr);
+            DateiUndKonsolenAusgabe ausgabe = new DateiUndKonsolenAusgabe(eingabejahr, eingabemodus);
+            ausgabe.gibAus();
             Console.ReadLine();
             return 0;
-
         } //ende main()
     } //ende class KalenderErzeuger
 } //ende namespace KalenderWelt
