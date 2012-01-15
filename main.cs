@@ -50,7 +50,15 @@ namespace KalenderWelt
             } while (!eingabeOk);
             Console.WriteLine("");
 
-            DateiUndKonsolenAusgabe ausgabe = new DateiUndKonsolenAusgabe(eingabejahr, eingabemodus);
+            Ausgabe ausgabe = null;
+            switch (eingabemodus) {
+                case 1: ausgabe = new MonatsBlockAusgabe(eingabejahr);
+                        break;
+                case 2: ausgabe = new MonatsBlockAusgabe2Spaltig(eingabejahr);
+                        break;
+                case 3: ausgabe = new TageszeilenAusgabe(eingabejahr);
+                        break;
+            }
             ausgabe.gibAus();
             Console.ReadLine();
             return 0;
