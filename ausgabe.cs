@@ -178,48 +178,30 @@ namespace KalenderWelt
         {
             oeffneStream();
             int monat, tag;
-            int wochentagDesErstenImMonat = 0; //Mo = 0, ...
+            int wochentag = 0;
             gibZeileAus("Kalender fuer das Jahr " + _jahr);
             gibZeileAus();
-            string wochentage = String.Join(" ", HilfsKonstrukte.wochenTagNamenKurz);
 
             if (HilfsKonstrukte.istSchaltJahr(_jahr))
             {
                 HilfsKonstrukte.tageImMonat[1] = 29; //Februar Feld im Array bei Schaltjahren auf 29 setzen
             }
-            wochentagDesErstenImMonat = HilfsKonstrukte.startWochenTag(_jahr);
+            wochentag = HilfsKonstrukte.startWochenTag(_jahr);
             for (monat = 0; monat < 12; monat++) //Schleife für die Erstellung der Monate: 0=Jan bis 11=Dez
             {
                 gibZeileAus("      " + HilfsKonstrukte.monatsNamen[monat]);
-                gibZeileAus(wochentage);
-
                 if (monat > 0)
                 {
-                    wochentagDesErstenImMonat += HilfsKonstrukte.tageImMonat[monat - 1] % 7;
-                    wochentagDesErstenImMonat %= 7;
                 }
 
-                //Die Woche beginnt immer Montags, nur der 1. eines Monats 
-                //kann auf verschiedene Wochentage fallen. 
-                int ausgabePosition = wochentagDesErstenImMonat;
-
-                string zeile = "".PadLeft(ausgabePosition * 3);
                 for (tag = 1; tag <= HilfsKonstrukte.tageImMonat[monat]; tag++) //solange Zähler kleiner gleich Wert aus Array Tage 
                 {
-                    zeile += tag.ToString().PadRight(3);
-                    ausgabePosition++;
-
-                    //wenn hinterste Position erreicht Zeihlenumbruch einfügen und Bildschirm-Positionszähler zurücksetzen
-                    if (ausgabePosition > 6)
-                    {
-                        gibZeileAus(zeile);
-                        ausgabePosition = 0;
-                        zeile = "";
+                    gibZeileAus(HilfsKonstrukte.wochenTagNamenKurz[wochentag] + 
+                                " " + tag.ToString().PadLeft(3));
+                    if (wochentag == 6) {
+                        gibZeileAus("---------------------");
                     }
-                }
-                if (zeile.Length > 0) //wenn mehr als 0 Zeichen vorhanden sind ganze Zeile ausgeben
-                {
-                    gibZeileAus(zeile);
+                    wochentag = (wochentag + 1) % 7;
                 }
                 //freie Zeilen zwischen den Monaten auf dem Bildschirm 
                 gibZeileAus();
