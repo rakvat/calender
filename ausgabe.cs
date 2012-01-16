@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Collections.Generic;
 
 namespace KalenderWelt
 {
@@ -56,6 +57,7 @@ namespace KalenderWelt
             oeffneStream();
             int monat, tag;
             int wochentagDesErstenImMonat = 0; //Mo = 0, ...
+            
 
             gibZeileAus("Kalender fuer das Jahr " + _jahr);
             gibZeileAus();
@@ -109,6 +111,9 @@ namespace KalenderWelt
 
     public class MonatsBlockAusgabe2Spaltig : Ausgabe
     {
+        private Dictionary<int, List<string> > preparedStrings = new Dictionary<int, List<string> > ();
+        private const int SPALTEN_BREITE = 3 * 7 + 10; //3*7 ist ein Monat breit
+
         public MonatsBlockAusgabe2Spaltig(int dasJahr) : base(dasJahr) {
         }
 
@@ -130,8 +135,9 @@ namespace KalenderWelt
             wochentagDesErstenImMonat = HilfsKonstrukte.startWochenTag(_jahr);
             for (monat = 0; monat < 12; monat++) //Schleife für die Erstellung der Monate: 0=Jan bis 11=Dez
             {
-                gibZeileAus("      " + HilfsKonstrukte.monatsNamen[monat]);
-                gibZeileAus(wochentage);
+                preparedStrings[monat] = new List<string>();
+                preparedStrings[monat].Add("      " + HilfsKonstrukte.monatsNamen[monat]);
+                preparedStrings[monat].Add(wochentage);
 
                 if (monat > 0)
                 {
@@ -152,19 +158,30 @@ namespace KalenderWelt
                     //wenn hinterste Position erreicht Zeihlenumbruch einfügen und Bildschirm-Positionszähler zurücksetzen
                     if (ausgabePosition > 6)
                     {
-                        gibZeileAus(zeile);
+                        preparedStrings[monat].Add(zeile);
                         ausgabePosition = 0;
                         zeile = "";
                     }
                 }
                 if (zeile.Length > 0) //wenn mehr als 0 Zeichen vorhanden sind ganze Zeile ausgeben
                 {
-                    gibZeileAus(zeile);
+                    preparedStrings[monat].Add(zeile);
                 }
                 //freie Zeilen zwischen den Monaten auf dem Bildschirm 
-                gibZeileAus();
+                while(preparedStrings[monat].Count < 9) {
+                    preparedStrings[monat].Add("");
+                }
 
             } //ende for Schleife Monat   
+
+            for (monat = 0; monat < 6; monat++) 
+            {
+                for (int i = 0, l = preparedStrings[monat].Count; i < l; ++i) 
+                {
+                    gibZeileAus(preparedStrings[monat][i].PadRight(SPALTEN_BREITE) 
+                                + preparedStrings[monat + 6][i]); 
+                }
+            }
             schliesseStream();
         }
     } //ende class MonatsBlockAusgabe2Spaltig
