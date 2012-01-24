@@ -7,11 +7,17 @@ namespace KalenderWelt
     public abstract class Ausgabe
     {
         private StreamWriter _streamWriter;
+<<<<<<< HEAD
         protected int _jahr;
         protected int _modus;
 
         public Ausgabe(int dasJahr, int eingabemodus) //Konstruktor der Klasse Ausgabe, übergibt zwei int werte von main.cs Datei an ausgabe.cs
         {
+=======
+        protected KalenderJahr _jahr;
+
+        public Ausgabe(ref KalenderJahr dasJahr) {
+>>>>>>> 407676df80ec15ac080c174e93882278a83fdba1
             _jahr = dasJahr;
             _modus = eingabemodus;
         }
@@ -29,7 +35,7 @@ namespace KalenderWelt
 
         protected void oeffneStream(int eingabemodus)
         {
-            string jahr = Convert.ToString(_jahr);
+            string jahr = Convert.ToString(_jahr.Jahreszahl());
             string Dateiname;
             Dateiname = jahr.Insert(4, ".txt");
             jahr = Dateiname;
@@ -57,9 +63,13 @@ namespace KalenderWelt
 
     public class MonatsBlockAusgabe : Ausgabe
     {
+<<<<<<< HEAD
         public MonatsBlockAusgabe(int dasJahr, int eingabemodus)
             : base(dasJahr, eingabemodus)
         {
+=======
+        public MonatsBlockAusgabe(ref KalenderJahr dasJahr) : base(ref dasJahr) {
+>>>>>>> 407676df80ec15ac080c174e93882278a83fdba1
         }
 
         public override void gibAus()
@@ -67,17 +77,22 @@ namespace KalenderWelt
             oeffneStream(_modus);
             int monat, tag;
             int wochentagDesErstenImMonat = 0; //Mo = 0, ...
+<<<<<<< HEAD
 
 
             gibZeileAus("Kalender fuer das Jahr " + _jahr);
+=======
+            
+            gibZeileAus("Kalender fuer das Jahr " + _jahr.Jahreszahl());
+>>>>>>> 407676df80ec15ac080c174e93882278a83fdba1
             gibZeileAus();
             string wochentage = String.Join(" ", HilfsKonstrukte.wochenTagNamenKurz);
 
-            if (HilfsKonstrukte.istSchaltJahr(_jahr))
+            if (_jahr.IstSchaltjahr())
             {
                 HilfsKonstrukte.tageImMonat[1] = 29; //Februar Feld im Array bei Schaltjahren auf 29 setzen
             }
-            wochentagDesErstenImMonat = HilfsKonstrukte.startWochenTag(_jahr);
+            wochentagDesErstenImMonat = _jahr.StartWochenTag();
             for (monat = 0; monat < 12; monat++) //Schleife für die Erstellung der Monate: 0=Jan bis 11=Dez
             {
                 gibZeileAus("      " + HilfsKonstrukte.monatsNamen[monat]);
@@ -124,9 +139,13 @@ namespace KalenderWelt
         private Dictionary<int, List<string>> preparedStrings = new Dictionary<int, List<string>>();
         private const int SPALTEN_BREITE = 3 * 7 + 10; //3*7 ist ein Monat breit
 
+<<<<<<< HEAD
         public MonatsBlockAusgabe2Spaltig(int dasJahr, int eingabemodus)
             : base(dasJahr, eingabemodus)
         {
+=======
+        public MonatsBlockAusgabe2Spaltig(ref KalenderJahr dasJahr) : base(ref dasJahr) {
+>>>>>>> 407676df80ec15ac080c174e93882278a83fdba1
         }
 
         public override void gibAus()
@@ -136,15 +155,15 @@ namespace KalenderWelt
             int monat, tag;
             int wochentagDesErstenImMonat = 0; //Mo = 0, ...
 
-            gibZeileAus("Kalender fuer das Jahr " + _jahr);
+            gibZeileAus("Kalender fuer das Jahr " + _jahr.Jahreszahl());
             gibZeileAus();
             string wochentage = String.Join(" ", HilfsKonstrukte.wochenTagNamenKurz);
 
-            if (HilfsKonstrukte.istSchaltJahr(_jahr))
+            if (_jahr.IstSchaltjahr())
             {
                 HilfsKonstrukte.tageImMonat[1] = 29; //Februar Feld im Array bei Schaltjahren auf 29 setzen
             }
-            wochentagDesErstenImMonat = HilfsKonstrukte.startWochenTag(_jahr);
+            wochentagDesErstenImMonat = _jahr.StartWochenTag();
             for (monat = 0; monat < 12; monat++) //Schleife für die Erstellung der Monate: 0=Jan bis 11=Dez
             {
                 preparedStrings[monat] = new List<string>();
@@ -201,9 +220,13 @@ namespace KalenderWelt
 
     public class TageszeilenAusgabe : Ausgabe
     {
+<<<<<<< HEAD
         public TageszeilenAusgabe(int dasJahr, int eingabemodus)
             : base(dasJahr, eingabemodus)
         {
+=======
+        public TageszeilenAusgabe(ref KalenderJahr dasJahr) : base(ref dasJahr) {
+>>>>>>> 407676df80ec15ac080c174e93882278a83fdba1
         }
 
         public override void gibAus()
@@ -211,14 +234,14 @@ namespace KalenderWelt
             oeffneStream(_modus);
             int monat, tag;
             int wochentag = 0;
-            gibZeileAus("Kalender fuer das Jahr " + _jahr);
+            gibZeileAus("Kalender fuer das Jahr " + _jahr.Jahreszahl());
             gibZeileAus();
 
-            if (HilfsKonstrukte.istSchaltJahr(_jahr))
+            if (_jahr.IstSchaltjahr())
             {
                 HilfsKonstrukte.tageImMonat[1] = 29; //Februar Feld im Array bei Schaltjahren auf 29 setzen
             }
-            wochentag = HilfsKonstrukte.startWochenTag(_jahr);
+            wochentag = _jahr.StartWochenTag();
             for (monat = 0; monat < 12; monat++) //Schleife für die Erstellung der Monate: 0=Jan bis 11=Dez
             {
                 gibZeileAus("      " + HilfsKonstrukte.monatsNamen[monat]);
