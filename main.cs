@@ -64,14 +64,18 @@ namespace KalenderWelt
             } while (!eingabeOk);
             Console.WriteLine("");
 
+
+            KalenderJahr kalenderJahr = new KalenderJahr(eingabejahr);
+
+
             Ausgabe ausgabe = null;
             switch (eingabemodus)
             {
-                case 1: ausgabe = new MonatsBlockAusgabe(eingabejahr);
+                case 1: ausgabe = new MonatsBlockAusgabe(ref kalenderJahr);
                     break;
-                case 2: ausgabe = new MonatsBlockAusgabe2Spaltig(eingabejahr);
+                case 2: ausgabe = new MonatsBlockAusgabe2Spaltig(ref kalenderJahr);
                     break;
-                case 3: ausgabe = new TageszeilenAusgabe(eingabejahr);
+                case 3: ausgabe = new TageszeilenAusgabe(ref kalenderJahr);
                     break;
             }
             ausgabe.gibAus();
