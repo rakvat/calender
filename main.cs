@@ -71,19 +71,11 @@ namespace KalenderWelt
             Ausgabe ausgabe = null;
             switch (eingabemodus)
             {
-<<<<<<< HEAD
-                case 1: ausgabe = new MonatsBlockAusgabe(eingabejahr, eingabemodus);
+                case 1: ausgabe = new MonatsBlockAusgabe(ref kalenderJahr, eingabemodus);
                     break;
-                case 2: ausgabe = new MonatsBlockAusgabe2Spaltig(eingabejahr, eingabemodus);
+                case 2: ausgabe = new MonatsBlockAusgabe2Spaltig(ref kalenderJahr, eingabemodus);
                     break;
-                case 3: ausgabe = new TageszeilenAusgabe(eingabejahr, eingabemodus);
-=======
-                case 1: ausgabe = new MonatsBlockAusgabe(ref kalenderJahr);
-                    break;
-                case 2: ausgabe = new MonatsBlockAusgabe2Spaltig(ref kalenderJahr);
-                    break;
-                case 3: ausgabe = new TageszeilenAusgabe(ref kalenderJahr);
->>>>>>> 407676df80ec15ac080c174e93882278a83fdba1
+                case 3: ausgabe = new TageszeilenAusgabe(ref kalenderJahr, eingabemodus);
                     break;
             }
             ausgabe.gibAus();
@@ -157,7 +149,7 @@ namespace KalenderWelt
             string[] mustertext = new string[600];
             int korekt = 100, zeilen1 = 0, zeilen2 = 0;
 
-            FileStream fs = new FileStream("kalenderausgabe\\" + eingabemodus + "Kalender" + eingabejahr + ".txt", FileMode.Open);  //angegebene Text Datei öffnen
+            FileStream fs = new FileStream("kalenderausgabe/" + eingabemodus + "Kalender" + eingabejahr + ".txt", FileMode.Open);  //angegebene Text Datei öffnen
             StreamReader sr = new StreamReader(fs);      //streamrader anlegen
             while (sr.Peek() >= 0)                     //Text Datei auslesen solange etwas vorhanden ist
             //for (int i = 0; i < 100; i++)
@@ -168,7 +160,7 @@ namespace KalenderWelt
             }
             sr.Close(); //Datei schliesen  
 
-            FileStream fs2 = new FileStream("test\\" + eingabemodus + "Kalender" + eingabejahr + ".txt", FileMode.Open);  //angegebene Text Datei öffnen
+            FileStream fs2 = new FileStream("test/" + eingabemodus + "Kalender" + eingabejahr + ".txt", FileMode.Open);  //angegebene Text Datei öffnen
             StreamReader sr2 = new StreamReader(fs2);      //streamrader anlegen
             while (sr2.Peek() >= 0)                     //Text Datei auslesen solange etwas vorhanden ist
             //for (int i = 0; i < 100; i++)

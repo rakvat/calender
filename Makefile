@@ -15,7 +15,7 @@ libtest: test.cs
 start:
 	./_builds/kalender.exe
 
-test:
+runtest:
 	nunit-console _builds/test.dll
 
 clean:
