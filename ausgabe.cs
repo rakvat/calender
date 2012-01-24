@@ -4,13 +4,16 @@ using System.Collections.Generic;
 
 namespace KalenderWelt
 {
-    public abstract class Ausgabe 
+    public abstract class Ausgabe
     {
         private StreamWriter _streamWriter;
         protected int _jahr;
+        protected int _modus;
 
-        public Ausgabe(int dasJahr) {
+        public Ausgabe(int dasJahr, int eingabemodus) //Konstruktor der Klasse Ausgabe, übergibt zwei int werte von main.cs Datei an ausgabe.cs
+        {
             _jahr = dasJahr;
+            _modus = eingabemodus;
         }
 
         protected void gibZeileAus() //erzeugt Leere Zeilen, ohne übergabewert
@@ -24,13 +27,18 @@ namespace KalenderWelt
             Console.WriteLine(dieZeile);
         }
 
-        protected void oeffneStream()
+        protected void oeffneStream(int eingabemodus)
         {
             string jahr = Convert.ToString(_jahr);
             string Dateiname;
             Dateiname = jahr.Insert(4, ".txt");
             jahr = Dateiname;
             Dateiname = jahr.Insert(0, "Kalender");
+
+            if (_modus == 1) Dateiname = Dateiname.Insert(0, "1");
+            if (_modus == 2) Dateiname = Dateiname.Insert(0, "2");
+            if (_modus == 3) Dateiname = Dateiname.Insert(0, "3");
+
             if (!System.IO.Directory.Exists("kalenderausgabe/"))
             {
                 Directory.CreateDirectory("kalenderausgabe"); //anlegen des Ordners wenn nicht vorhanden
@@ -49,15 +57,17 @@ namespace KalenderWelt
 
     public class MonatsBlockAusgabe : Ausgabe
     {
-        public MonatsBlockAusgabe(int dasJahr) : base(dasJahr) {
+        public MonatsBlockAusgabe(int dasJahr, int eingabemodus)
+            : base(dasJahr, eingabemodus)
+        {
         }
 
         public override void gibAus()
         {
-            oeffneStream();
+            oeffneStream(_modus);
             int monat, tag;
             int wochentagDesErstenImMonat = 0; //Mo = 0, ...
-            
+
 
             gibZeileAus("Kalender fuer das Jahr " + _jahr);
             gibZeileAus();
@@ -111,15 +121,17 @@ namespace KalenderWelt
 
     public class MonatsBlockAusgabe2Spaltig : Ausgabe
     {
-        private Dictionary<int, List<string> > preparedStrings = new Dictionary<int, List<string> > ();
+        private Dictionary<int, List<string>> preparedStrings = new Dictionary<int, List<string>>();
         private const int SPALTEN_BREITE = 3 * 7 + 10; //3*7 ist ein Monat breit
 
-        public MonatsBlockAusgabe2Spaltig(int dasJahr) : base(dasJahr) {
+        public MonatsBlockAusgabe2Spaltig(int dasJahr, int eingabemodus)
+            : base(dasJahr, eingabemodus)
+        {
         }
 
         public override void gibAus()
         {
-            oeffneStream();
+            oeffneStream(_modus);
 
             int monat, tag;
             int wochentagDesErstenImMonat = 0; //Mo = 0, ...
@@ -168,18 +180,19 @@ namespace KalenderWelt
                     preparedStrings[monat].Add(zeile);
                 }
                 //freie Zeilen zwischen den Monaten auf dem Bildschirm 
-                while(preparedStrings[monat].Count < 9) {
+                while (preparedStrings[monat].Count < 9)
+                {
                     preparedStrings[monat].Add("");
                 }
 
             } //ende for Schleife Monat   
 
-            for (monat = 0; monat < 6; monat++) 
+            for (monat = 0; monat < 6; monat++)
             {
-                for (int i = 0, l = preparedStrings[monat].Count; i < l; ++i) 
+                for (int i = 0, l = preparedStrings[monat].Count; i < l; ++i)
                 {
-                    gibZeileAus(preparedStrings[monat][i].PadRight(SPALTEN_BREITE) 
-                                + preparedStrings[monat + 6][i]); 
+                    gibZeileAus(preparedStrings[monat][i].PadRight(SPALTEN_BREITE)
+                                + preparedStrings[monat + 6][i]);
                 }
             }
             schliesseStream();
@@ -188,12 +201,14 @@ namespace KalenderWelt
 
     public class TageszeilenAusgabe : Ausgabe
     {
-        public TageszeilenAusgabe(int dasJahr) : base(dasJahr) {
+        public TageszeilenAusgabe(int dasJahr, int eingabemodus)
+            : base(dasJahr, eingabemodus)
+        {
         }
 
         public override void gibAus()
         {
-            oeffneStream();
+            oeffneStream(_modus);
             int monat, tag;
             int wochentag = 0;
             gibZeileAus("Kalender fuer das Jahr " + _jahr);
@@ -213,9 +228,10 @@ namespace KalenderWelt
 
                 for (tag = 1; tag <= HilfsKonstrukte.tageImMonat[monat]; tag++) //solange Zähler kleiner gleich Wert aus Array Tage 
                 {
-                    gibZeileAus(HilfsKonstrukte.wochenTagNamenKurz[wochentag] + 
+                    gibZeileAus(HilfsKonstrukte.wochenTagNamenKurz[wochentag] +
                                 " " + tag.ToString().PadLeft(3));
-                    if (wochentag == 6) {
+                    if (wochentag == 6)
+                    {
                         gibZeileAus("---------------------");
                     }
                     wochentag = (wochentag + 1) % 7;

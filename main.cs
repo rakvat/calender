@@ -67,11 +67,11 @@ namespace KalenderWelt
             Ausgabe ausgabe = null;
             switch (eingabemodus)
             {
-                case 1: ausgabe = new MonatsBlockAusgabe(eingabejahr);
+                case 1: ausgabe = new MonatsBlockAusgabe(eingabejahr, eingabemodus);
                     break;
-                case 2: ausgabe = new MonatsBlockAusgabe2Spaltig(eingabejahr);
+                case 2: ausgabe = new MonatsBlockAusgabe2Spaltig(eingabejahr, eingabemodus);
                     break;
-                case 3: ausgabe = new TageszeilenAusgabe(eingabejahr);
+                case 3: ausgabe = new TageszeilenAusgabe(eingabejahr, eingabemodus);
                     break;
             }
             ausgabe.gibAus();
@@ -138,6 +138,49 @@ namespace KalenderWelt
                     Console.WriteLine("Eintrag: " + meinEintrag.toString());
                 }
             } //Ende Ordner vorhanden
+
+
+            //----------Anfang TEST Code zum vergleichen des erzeugten Kalenders mit dem im Verzeichnis /test abgeletem Muster ------------
+            string[] eingabetext = new string[600];
+            string[] mustertext = new string[600];
+            int korekt = 100, zeilen1 = 0, zeilen2 = 0;
+
+            FileStream fs = new FileStream("kalenderausgabe\\" + eingabemodus + "Kalender" + eingabejahr + ".txt", FileMode.Open);  //angegebene Text Datei öffnen
+            StreamReader sr = new StreamReader(fs);      //streamrader anlegen
+            while (sr.Peek() >= 0)                     //Text Datei auslesen solange etwas vorhanden ist
+            //for (int i = 0; i < 100; i++)
+            {
+                eingabetext[zeilen1] = sr.ReadLine();                     //Text Datei Inhalt in Veriable übertragen 
+                zeilen1++;                                           //ermitteln der Datei länge, wichtig für Vergleich mit for Schleife
+                //   MessageBox.Show(eingabe[i]);                    //Inhalt anzeigen    
+            }
+            sr.Close(); //Datei schliesen  
+
+            FileStream fs2 = new FileStream("test\\" + eingabemodus + "Kalender" + eingabejahr + ".txt", FileMode.Open);  //angegebene Text Datei öffnen
+            StreamReader sr2 = new StreamReader(fs2);      //streamrader anlegen
+            while (sr2.Peek() >= 0)                     //Text Datei auslesen solange etwas vorhanden ist
+            //for (int i = 0; i < 100; i++)
+            {
+                mustertext[zeilen2] = sr2.ReadLine();                    //Text Datei Inhalt in Veriable übertragen
+                zeilen2++;
+                // MessageBox.Show(muster[i]);                    //Inhalt anzeigen 
+            }
+            sr2.Close(); //Datei schliesen  
+
+            for (zeilen1 = 0; zeilen1 < zeilen2; zeilen1++) //Vergleich läuft so lange wie Daten vorhanden sind
+            {
+                if (eingabetext[zeilen1].Equals(mustertext[zeilen1])) korekt = korekt - 0; //bei jedem Fehler der beim Vergleich auftritt 1 abziehen
+                else
+                {
+                    korekt = korekt - 1;
+                }
+            }
+
+            Console.WriteLine("\nTest wird durchgeführt für das Kalenderjahr: " + eingabejahr + " mit dem Eingabebemodus: " + eingabemodus);
+            if (korekt == 100) Console.WriteLine("Ergebnis: Kalender sind gleich " + korekt + "% Übereinstimmung");  //wenn die Variable am Ende noch bei 100 ist sind beide Text Dateien gleich.
+            else Console.WriteLine("Ergebnis: Kalender sind verschieden, " + korekt + "% Übereinstimmung"); //die Variabel korekt entspricht in etwar der Übeinstimmung in %
+            //------------ Ende TEST Code --------------------------------------------------------------------------
+
             //Erwartet Eingabe vor Beendigung des Programms
             Console.ReadLine();
             return 0;
