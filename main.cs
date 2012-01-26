@@ -80,6 +80,14 @@ namespace KalenderWelt
             }
             ausgabe.gibAus();
 
+
+            string target = @"input/"; //Verzeichnis, dessen Inhalt aufgelistet werden soll angeben
+            Console.WriteLine("Die Anzahl der Dateien im Verzeichnis {0} ist {1}", target, Directory.GetFiles(target).Length);
+
+            DirectoryInfo d = new DirectoryInfo(target);
+            foreach (FileInfo f in d.GetFiles("*.xml")) //Suche alle .xml Dateien im angegebene Verzeichnis und gebe sie aus.
+                Console.WriteLine(f.Name + ";  " + f.Length + "; " + f.CreationTime);
+
             //Eintrag Experimente
             List<Eintrag> eintraege = new List<Eintrag>();
             //eintraege.Add(new EinmaligerTermin("beruflicher Termin", new DateTime(2012, 1, 23)));
