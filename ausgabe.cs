@@ -207,37 +207,24 @@ namespace KalenderWelt
         public override void gibAus()
         {
             oeffneStream(_modus);
-            int monat, tag;
-            int wochentag = 0;
             gibZeileAus("Kalender fuer das Jahr " + _jahr.Jahreszahl());
             gibZeileAus();
 
-            if (_jahr.IstSchaltjahr())
+            foreach (Monat monat in _jahr.GibMonate()) 
             {
-                HilfsKonstrukte.tageImMonat[1] = 29; //Februar Feld im Array bei Schaltjahren auf 29 setzen
-            }
-            wochentag = _jahr.StartWochenTag();
-            for (monat = 0; monat < 12; monat++) //Schleife für die Erstellung der Monate: 0=Jan bis 11=Dez
-            {
-                gibZeileAus("      " + HilfsKonstrukte.monatsNamen[monat]);
-                if (monat > 0)
+                gibZeileAus("      " + HilfsKonstrukte.monatsNamen[monat.GibIndex()]);
+                foreach (Tag tag in monat.GibTage())
                 {
-                }
-
-                for (tag = 1; tag <= HilfsKonstrukte.tageImMonat[monat]; tag++) //solange Zähler kleiner gleich Wert aus Array Tage 
-                {
-                    gibZeileAus(HilfsKonstrukte.wochenTagNamenKurz[wochentag] +
-                                " " + tag.ToString().PadLeft(3));
+                    int wochentag = tag.GibWochentag();
+                    gibZeileAus(HilfsKonstrukte.wochenTagNamenKurz[wochentag] + 
+                                " " + tag.GibIndex().ToString().PadLeft(3));
                     if (wochentag == 6)
                     {
                         gibZeileAus("---------------------");
                     }
-                    wochentag = (wochentag + 1) % 7;
                 }
-                //freie Zeilen zwischen den Monaten auf dem Bildschirm 
                 gibZeileAus();
-
-            } //ende for Schleife Monat   
+            }
             schliesseStream();
         }
     } //ende class TageszeilenAusgabe

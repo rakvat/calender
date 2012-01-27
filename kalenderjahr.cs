@@ -29,7 +29,7 @@ namespace KalenderWelt
                 {
                     _monate.Add(new Monat(monat));
                 }
-                Tag meinTag = new Tag(tagImMonat, wochenTag, i+1);
+                Tag meinTag = new Tag(tagImMonat+1, wochenTag, i+1);
                 _tage.Add(meinTag);
                 _monate[monat].FuegeTagAn(ref meinTag);
                 wochenTag = (++wochenTag) % HilfsKonstrukte.TAGE_PRO_WOCHE;
@@ -39,7 +39,10 @@ namespace KalenderWelt
                     tagImMonat = 0;
                 }
             }
-                
+        }
+
+        public List<Monat> GibMonate() {
+            return _monate;
         }
 
         public int Jahreszahl() 
@@ -68,18 +71,28 @@ namespace KalenderWelt
 
     public class Monat 
     {
-        private int _monat; //startet mit 0
+        private int _index; //startet mit 0
         private List<Tag> _tage;
         
-        public Monat(int derMonat)
+        public Monat(int derIndex)
         {
-            _monat = derMonat;
+            _index = derIndex;
             _tage = new List<Tag>();
         }
 
         public void FuegeTagAn(ref Tag derTag) 
         {
             _tage.Add(derTag);
+        }
+
+        public List<Tag> GibTage() 
+        {
+            return _tage;
+        }
+
+        public int GibIndex()
+        {
+            return _index;
         }
     }
 
@@ -97,17 +110,27 @@ namespace KalenderWelt
 
     public class Tag
     {
-        private int _tag;  //startet mit 1
+        private int _index;  //startet mit 1
         private int _wochentag;
         private int _tagImJahr;
         private List<Eintrag> _eintraege;
 
-        public Tag(int derTag, int derWochentag, int derTagImJahr)
+        public Tag(int derIndex, int derWochentag, int derTagImJahr)
         {
-            _tag = derTag;
+            _index = derIndex;
             _wochentag = derWochentag;
             _tagImJahr = derTagImJahr;
             _eintraege = new List<Eintrag>();
+        }
+
+        public int GibWochentag()
+        {
+            return _wochentag;
+        }
+
+        public int GibIndex() 
+        {
+            return _index;
         }
 
         public void TrageEin(ref Eintrag derEintrag)
