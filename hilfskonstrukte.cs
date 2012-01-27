@@ -4,7 +4,7 @@ using System.IO;
 namespace KalenderWelt
 {
 
-    class HilfsKonstrukte {
+    public class HilfsKonstrukte {
         public const int TAGE_IM_JAHR = 365;
         public const int MONATE_IM_JAHR = 12;
         //nach der Revolution koennen wir hier einfach auf 10-Tages-Woche aendern ;-)

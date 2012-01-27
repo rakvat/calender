@@ -45,6 +45,10 @@ namespace KalenderWelt
             return _monate;
         }
 
+        public List<Tag> GibTage() {
+            return _tage;
+        }
+
         public int Jahreszahl() 
         {
             return _jahr;
