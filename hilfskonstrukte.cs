@@ -6,6 +6,9 @@ namespace KalenderWelt
 
     class HilfsKonstrukte {
         public const int TAGE_IM_JAHR = 365;
+        public const int MONATE_IM_JAHR = 12;
+        //nach der Revolution koennen wir hier einfach auf 10-Tages-Woche aendern ;-)
+        public const int TAGE_PRO_WOCHE = 7;
         public static string[] monatsNamen = 
             {"Januar", "Februar", "Maerz", "April", 
              "Mai", "Juni", "Juli", "August", 
