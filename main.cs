@@ -65,74 +65,9 @@ namespace KalenderWelt
             Console.WriteLine("");
 
 
-            string target = @"input/"; //Verzeichnis, dessen Inhalt aufgelistet werden soll angeben
-            Console.WriteLine("Die Anzahl der Dateien im Verzeichnis {0} ist {1}", target, Directory.GetFiles(target).Length);
-
-            DirectoryInfo d = new DirectoryInfo(target);
-            foreach (FileInfo f in d.GetFiles("*.xml")) //Suche alle .xml Dateien im angegebene Verzeichnis und gebe sie aus.
-                Console.WriteLine(f.Name + ";  " + f.Length + "; " + f.CreationTime);
-
             //Eintrag Experimente
-            List<Eintrag> eintraege = new List<Eintrag>();
-            //eintraege.Add(new EinmaligerTermin("beruflicher Termin", new DateTime(2012, 1, 23)));
-
-            XmlDocument doc = new XmlDocument();  //aus xml laden
-            if (!System.IO.Directory.Exists("input/"))
-            {
-                Directory.CreateDirectory("input"); //anlegen des Ordners wenn nicht vorhanden
-                Console.WriteLine("xml Dateien nicht gefunden.");
-            }
-            else //wenn Ordner vorhanden Datei öffen 
-            {
-                doc.Load("input/geburtstage.xml");
-                XmlElement wurzel = doc.DocumentElement;
-                XmlNodeList eintragListe = wurzel.SelectNodes("./JaehrlichesEreignisAnFestemTag");
-                Console.WriteLine("\nAnzahl der Eintraege in der xml Datei Geburtstage: " + eintragListe.Count);
-                foreach (XmlNode eintrag in eintragListe)
-                {
-                    string titel = eintrag.Attributes["titel"].Value;
-                    int monat, tag;
-                    if (!int.TryParse(eintrag.SelectSingleNode("./monat").FirstChild.Value, out monat))
-                    {
-                        Console.WriteLine("Monat ist keine Zahl");
-                    }
-                    if (!int.TryParse(eintrag.SelectSingleNode("./tag").FirstChild.Value, out tag))
-                    {
-                        Console.WriteLine("Tag ist keine Zahl");
-                    }
-                    eintraege.Add(new JaehrlichesEreignisAnFestemTag(titel, monat, tag));
-                }
-
-
-                doc.Load("input/aktuelleTermine.xml"); //zweites xml Dokument laden
-                XmlElement wurzel2 = doc.DocumentElement;
-                XmlNodeList eintragListe2 = wurzel2.SelectNodes("./EinmaligerTermin");
-                Console.WriteLine("\nAnzahl der Eintraege in der xml Datei aktuelle Termine: " + eintragListe2.Count);
-                foreach (XmlNode eintrag in eintragListe2)
-                {
-                    string titel = eintrag.Attributes["titel"].Value;
-                    int jahr, monat, tag;
-                    if (!int.TryParse(eintrag.SelectSingleNode("./jahr").FirstChild.Value, out jahr))
-                    {
-                        Console.WriteLine("Jahr ist keine Zahl");
-                    }
-                    if (!int.TryParse(eintrag.SelectSingleNode("./monat").FirstChild.Value, out monat))
-                    {
-                        Console.WriteLine("Monat ist keine Zahl");
-                    }
-                    if (!int.TryParse(eintrag.SelectSingleNode("./tag").FirstChild.Value, out tag))
-                    {
-                        Console.WriteLine("Tag ist keine Zahl");
-                    }
-                    eintraege.Add(new EinmaligerTermin(titel, new DateTime(jahr, monat, tag)));
-                }
-
-                foreach (Eintrag meinEintrag in eintraege)
-                {
-                    Console.WriteLine("Eintrag: " + meinEintrag.toString());
-                }
-            } //Ende Ordner vorhanden
-
+            List<Eintrag> eintraege = leseEintraege();
+                
 
             KalenderJahr kalenderJahr = new KalenderJahr(eingabejahr);
             kalenderJahr.TrageEin(ref eintraege);
@@ -158,8 +93,73 @@ namespace KalenderWelt
             return 0;
         } //ende main()
 
+                
+        static List<Eintrag> leseEintraege() 
+        {
 
-        static void ausgabeTest(int eingabejahr, int eingabemodus) {
+            string target = @"input/"; //Verzeichnis, dessen Inhalt aufgelistet werden soll angeben
+            Console.WriteLine("Die Anzahl der Dateien im Verzeichnis {0} ist {1}", target, Directory.GetFiles(target).Length);
+
+            DirectoryInfo d = new DirectoryInfo(target);
+            foreach (FileInfo f in d.GetFiles("*.xml")) //Suche alle .xml Dateien im angegebene Verzeichnis und gebe sie aus.
+                Console.WriteLine(f.Name + ";  " + f.Length + "; " + f.CreationTime);
+
+            
+            List<Eintrag> meineEintraege = new List<Eintrag>();
+            if (!System.IO.Directory.Exists("input/"))
+            {
+                Directory.CreateDirectory("input"); //anlegen des Ordners wenn nicht vorhanden
+                Console.WriteLine("xml Dateien nicht gefunden.");
+                return meineEintraege;
+            }
+            XmlDocument doc = new XmlDocument();  //aus xml laden
+            doc.Load("input/geburtstage.xml");
+            XmlElement wurzel = doc.DocumentElement;
+            XmlNodeList eintragListe = wurzel.SelectNodes("./JaehrlichesEreignisAnFestemTag");
+            Console.WriteLine("\nAnzahl der Eintraege in der xml Datei Geburtstage: " + eintragListe.Count);
+            foreach (XmlNode eintrag in eintragListe)
+            {
+                string titel = eintrag.Attributes["titel"].Value;
+                int monat, tag;
+                monat = HilfsKonstrukte.KonvertiereZuInt(
+                            eintrag.SelectSingleNode("./monat").FirstChild.Value,
+                            "Monat");
+                tag = HilfsKonstrukte.KonvertiereZuInt(
+                            eintrag.SelectSingleNode("./tag").FirstChild.Value, 
+                            "Tag");
+                meineEintraege.Add(new JaehrlichesEreignisAnFestemTag(titel, monat, tag));
+            }
+
+            doc.Load("input/aktuelleTermine.xml"); //zweites xml Dokument laden
+            wurzel = doc.DocumentElement;
+            eintragListe = wurzel.SelectNodes("./EinmaligerTermin");
+            Console.WriteLine("\nAnzahl der Eintraege in der xml Datei aktuelle Termine: " + eintragListe.Count);
+            foreach (XmlNode eintrag in eintragListe)
+            {
+                string titel = eintrag.Attributes["titel"].Value;
+                int jahr, monat, tag;
+                jahr = HilfsKonstrukte.KonvertiereZuInt(
+                        eintrag.SelectSingleNode("./jahr").FirstChild.Value, 
+                        "Jahr");
+                monat = HilfsKonstrukte.KonvertiereZuInt(
+                        eintrag.SelectSingleNode("./monat").FirstChild.Value, 
+                        "Monat");
+                tag = HilfsKonstrukte.KonvertiereZuInt(
+                        eintrag.SelectSingleNode("./tag").FirstChild.Value, 
+                        "Tag");
+                meineEintraege.Add(new EinmaligerTermin(titel, new DateTime(jahr, monat, tag)));
+            }
+
+            //fuer debug
+            //foreach (Eintrag meinEintrag in eintraege)
+            //{
+            //    Console.WriteLine("Eintrag: " + meinEintrag.toString());
+            //}
+            return meineEintraege;
+        }
+
+        static void ausgabeTest(int eingabejahr, int eingabemodus) 
+        {
             //----------Anfang TEST Code zum vergleichen des erzeugten Kalenders mit dem im Verzeichnis /test abgeletem Muster ------------
             string[] eingabetext = new string[600];
             string[] mustertext = new string[600];

@@ -24,10 +24,21 @@ namespace KalenderWelt
               31, 30, 31, 31, 
               30, 31, 30, 31 };
 
-        public static bool IstSchaltjahr(int dasJahr) {
+        public static bool IstSchaltjahr(int dasJahr) 
+        {
             return ((dasJahr % 4 == 0) && 
                     ((dasJahr % 100 != 0) || 
                      (dasJahr % 400 == 0)));
+        }
+
+        public static int KonvertiereZuInt(string derString, string derDebugName)
+        {
+            int meinInt;
+            if (!int.TryParse(derString, out meinInt))
+            {
+                Console.WriteLine(derDebugName + " ist keine Zahl");
+            }
+            return meinInt;
         }
 
     } //ende class HilfsKonstrukte
