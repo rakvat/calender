@@ -97,14 +97,6 @@ namespace KalenderWelt
         static List<Eintrag> leseEintraege() 
         {
 
-            string target = @"input/"; //Verzeichnis, dessen Inhalt aufgelistet werden soll angeben
-            Console.WriteLine("Die Anzahl der Dateien im Verzeichnis {0} ist {1}", target, Directory.GetFiles(target).Length);
-
-            DirectoryInfo d = new DirectoryInfo(target);
-            foreach (FileInfo f in d.GetFiles("*.xml")) //Suche alle .xml Dateien im angegebene Verzeichnis und gebe sie aus.
-                Console.WriteLine(f.Name + ";  " + f.Length + "; " + f.CreationTime);
-
-            
             List<Eintrag> meineEintraege = new List<Eintrag>();
             if (!System.IO.Directory.Exists("input/"))
             {
@@ -112,42 +104,39 @@ namespace KalenderWelt
                 Console.WriteLine("xml Dateien nicht gefunden.");
                 return meineEintraege;
             }
-            XmlDocument doc = new XmlDocument();  //aus xml laden
-            doc.Load("input/geburtstage.xml");
-            XmlElement wurzel = doc.DocumentElement;
-            XmlNodeList eintragListe = wurzel.SelectNodes("./JaehrlichesEreignisAnFestemTag");
-            Console.WriteLine("\nAnzahl der Eintraege in der xml Datei Geburtstage: " + eintragListe.Count);
-            foreach (XmlNode eintrag in eintragListe)
-            {
-                string titel = eintrag.Attributes["titel"].Value;
-                int monat, tag;
-                monat = HilfsKonstrukte.KonvertiereZuInt(
-                            eintrag.SelectSingleNode("./monat").FirstChild.Value,
-                            "Monat");
-                tag = HilfsKonstrukte.KonvertiereZuInt(
-                            eintrag.SelectSingleNode("./tag").FirstChild.Value, 
-                            "Tag");
-                meineEintraege.Add(new JaehrlichesEreignisAnFestemTag(titel, monat, tag));
-            }
 
-            doc.Load("input/aktuelleTermine.xml"); //zweites xml Dokument laden
-            wurzel = doc.DocumentElement;
-            eintragListe = wurzel.SelectNodes("./EinmaligerTermin");
-            Console.WriteLine("\nAnzahl der Eintraege in der xml Datei aktuelle Termine: " + eintragListe.Count);
-            foreach (XmlNode eintrag in eintragListe)
+            string[] eintragTypen = {"JaehrlichesEreignisAnFestemTag", 
+                                     "EinmaligerTermin"};
+            string eintragVerzeichnis = @"input/"; 
+            DirectoryInfo d = new DirectoryInfo(eintragVerzeichnis);
+            foreach (FileInfo f in d.GetFiles("*.xml")) 
             {
-                string titel = eintrag.Attributes["titel"].Value;
-                int jahr, monat, tag;
-                jahr = HilfsKonstrukte.KonvertiereZuInt(
-                        eintrag.SelectSingleNode("./jahr").FirstChild.Value, 
-                        "Jahr");
-                monat = HilfsKonstrukte.KonvertiereZuInt(
-                        eintrag.SelectSingleNode("./monat").FirstChild.Value, 
-                        "Monat");
-                tag = HilfsKonstrukte.KonvertiereZuInt(
-                        eintrag.SelectSingleNode("./tag").FirstChild.Value, 
-                        "Tag");
-                meineEintraege.Add(new EinmaligerTermin(titel, new DateTime(jahr, monat, tag)));
+                Console.WriteLine("Lese Eintraege aus " + f.Name + ";  " + f.Length + "; " + f.CreationTime);
+                XmlDocument doc = new XmlDocument();  //aus xml laden
+                doc.Load(eintragVerzeichnis + "/" + f.Name);
+                XmlElement wurzel = doc.DocumentElement;
+
+                for (int i = 0; i < eintragTypen.Length; ++i)
+                {
+                    string xmlNodeName = eintragTypen[i];
+                    XmlNodeList eintragListe = wurzel.SelectNodes("./"+xmlNodeName);
+                    Console.WriteLine("\nAnzahl der " + xmlNodeName + " in der xml Datei " + f.Name + ": " + eintragListe.Count);
+                    foreach (XmlNode eintrag in eintragListe)
+                    {
+                        string titel = eintrag.Attributes["titel"].Value;
+                        switch (xmlNodeName)
+                        {
+                            case "JaehrlichesEreignisAnFestemTag":
+                                meineEintraege.Add(
+                                    new JaehrlichesEreignisAnFestemTag(titel, eintrag));
+                                break;
+                            case "EinmaligerTermin":
+                                meineEintraege.Add(
+                                    new EinmaligerTermin(titel, eintrag));
+                                break;
+                        }
+                    }
+                }
             }
 
             //fuer debug

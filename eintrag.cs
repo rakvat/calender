@@ -1,4 +1,6 @@
 using System;
+using System.Xml;
+using System.Xml.XPath;
 
 namespace KalenderWelt
 {
@@ -29,6 +31,22 @@ namespace KalenderWelt
         {
             _datum = dasDatum;
         }
+        
+        public EinmaligerTermin(string derTitel, XmlNode derKnoten)
+            : base(derTitel)
+        {
+            int jahr, monat, tag;
+            jahr = HilfsKonstrukte.KonvertiereZuInt(
+                    derKnoten.SelectSingleNode("./jahr").FirstChild.Value, 
+                    "Jahr");
+            monat = HilfsKonstrukte.KonvertiereZuInt(
+                    derKnoten.SelectSingleNode("./monat").FirstChild.Value, 
+                    "Monat");
+            tag = HilfsKonstrukte.KonvertiereZuInt(
+                    derKnoten.SelectSingleNode("./tag").FirstChild.Value, 
+                    "Tag");
+            _datum = new DateTime(jahr, monat, tag);
+        }
 
         public override string toString() 
         {
@@ -54,6 +72,17 @@ namespace KalenderWelt
         {
             _monat = derMonat;
             _tag = derTag;
+        }
+
+        public JaehrlichesEreignisAnFestemTag(string derTitel, XmlNode derKnoten) 
+            : base(derTitel)
+        {
+            _monat = HilfsKonstrukte.KonvertiereZuInt(
+                        derKnoten.SelectSingleNode("./monat").FirstChild.Value,
+                        "Monat");
+            _tag = HilfsKonstrukte.KonvertiereZuInt(
+                        derKnoten.SelectSingleNode("./tag").FirstChild.Value, 
+                        "Tag");
         }
 
         public override string toString() 
