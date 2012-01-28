@@ -40,7 +40,7 @@ namespace KalenderWelt
                 }
             } while (!eingabeOk);
 
-            Console.Write("Soll die Ausgabe \n1) Monatsblock einspaltig oder\n2) Monatsblock zweispaltig oder\n3) Zeilenweise sein?  ");
+            Console.Write("Soll die Ausgabe \n1) Monatsblock einspaltig oder\n2) Monatsblock zweispaltig oder\n3) Zeilenweise oder\n4) Zeilenweise mit Eintraegen sein?  ");
             eingabeOk = false;
             do
             {
@@ -49,7 +49,7 @@ namespace KalenderWelt
                 {
                     Console.WriteLine("Falsche Eingabe, da Buchstaben nicht möglich sind.");
                 }
-                else if ((eingabemodus < 1) || (eingabemodus > 3))
+                else if ((eingabemodus < 1) || (eingabemodus > 4))
                 {
                     Console.WriteLine("Falsche Eingabe. Modus ist nicht im gueltigen Bereich.");
                 }
@@ -63,22 +63,6 @@ namespace KalenderWelt
                 }
             } while (!eingabeOk);
             Console.WriteLine("");
-
-
-            KalenderJahr kalenderJahr = new KalenderJahr(eingabejahr);
-
-
-            Ausgabe ausgabe = null;
-            switch (eingabemodus)
-            {
-                case 1: ausgabe = new MonatsBlockAusgabe(ref kalenderJahr, eingabemodus);
-                    break;
-                case 2: ausgabe = new MonatsBlockAusgabe2Spaltig(ref kalenderJahr, eingabemodus);
-                    break;
-                case 3: ausgabe = new TageszeilenAusgabe(ref kalenderJahr, eingabemodus);
-                    break;
-            }
-            ausgabe.gibAus();
 
 
             string target = @"input/"; //Verzeichnis, dessen Inhalt aufgelistet werden soll angeben
@@ -119,21 +103,19 @@ namespace KalenderWelt
                     eintraege.Add(new JaehrlichesEreignisAnFestemTag(titel, monat, tag));
                 }
 
-                foreach (Eintrag meinEintrag in eintraege)
-                {
-                    Console.WriteLine("Eintrag: " + meinEintrag.toString());
-                }
-
 
                 doc.Load("input/aktuelleTermine.xml"); //zweites xml Dokument laden
                 XmlElement wurzel2 = doc.DocumentElement;
                 XmlNodeList eintragListe2 = wurzel2.SelectNodes("./EinmaligerTermin");
-                eintraege.Clear(); //löscht die Einträge aus der anderen xml Datei
                 Console.WriteLine("\nAnzahl der Eintraege in der xml Datei aktuelle Termine: " + eintragListe2.Count);
                 foreach (XmlNode eintrag in eintragListe2)
                 {
                     string titel = eintrag.Attributes["titel"].Value;
-                    int monat, tag;
+                    int jahr, monat, tag;
+                    if (!int.TryParse(eintrag.SelectSingleNode("./jahr").FirstChild.Value, out jahr))
+                    {
+                        Console.WriteLine("Jahr ist keine Zahl");
+                    }
                     if (!int.TryParse(eintrag.SelectSingleNode("./monat").FirstChild.Value, out monat))
                     {
                         Console.WriteLine("Monat ist keine Zahl");
@@ -142,7 +124,7 @@ namespace KalenderWelt
                     {
                         Console.WriteLine("Tag ist keine Zahl");
                     }
-                    eintraege.Add(new JaehrlichesEreignisAnFestemTag(titel, monat, tag));
+                    eintraege.Add(new EinmaligerTermin(titel, new DateTime(jahr, monat, tag)));
                 }
 
                 foreach (Eintrag meinEintrag in eintraege)
@@ -152,12 +134,43 @@ namespace KalenderWelt
             } //Ende Ordner vorhanden
 
 
+            KalenderJahr kalenderJahr = new KalenderJahr(eingabejahr);
+            kalenderJahr.TrageEin(ref eintraege);
+
+            Ausgabe ausgabe = null;
+            switch (eingabemodus)
+            {
+                case 1: ausgabe = new MonatsBlockAusgabe(ref kalenderJahr, eingabemodus);
+                    break;
+                case 2: ausgabe = new MonatsBlockAusgabe2Spaltig(ref kalenderJahr, eingabemodus);
+                    break;
+                case 3: ausgabe = new TageszeilenAusgabe(ref kalenderJahr, eingabemodus, false);
+                    break;
+                case 4: ausgabe = new TageszeilenAusgabe(ref kalenderJahr, eingabemodus, true);
+                    break;
+            }
+            ausgabe.gibAus();
+
+            ausgabeTest(eingabejahr, eingabemodus);
+
+            //Erwartet Eingabe vor Beendigung des Programms
+            Console.ReadLine();
+            return 0;
+        } //ende main()
+
+
+        static void ausgabeTest(int eingabejahr, int eingabemodus) {
             //----------Anfang TEST Code zum vergleichen des erzeugten Kalenders mit dem im Verzeichnis /test abgeletem Muster ------------
             string[] eingabetext = new string[600];
             string[] mustertext = new string[600];
             int korekt = 100, zeilen1 = 0, zeilen2 = 0;
 
-            FileStream fs = new FileStream("kalenderausgabe/" + eingabemodus + "Kalender" + eingabejahr + ".txt", FileMode.Open);  //angegebene Text Datei öffnen
+            string fileName = "kalenderausgabe/" + eingabemodus + "Kalender" + eingabejahr + ".txt";
+            if (!File.Exists(fileName)) {
+                Console.WriteLine("test file '" + fileName + "' not found");
+                return;
+            }
+            FileStream fs = new FileStream(fileName, FileMode.Open);  //angegebene Text Datei öffnen
             StreamReader sr = new StreamReader(fs);      //streamrader anlegen
             while (sr.Peek() >= 0)                     //Text Datei auslesen solange etwas vorhanden ist
             //for (int i = 0; i < 100; i++)
@@ -192,10 +205,6 @@ namespace KalenderWelt
             if (korekt == 100) Console.WriteLine("Ergebnis: Kalender sind gleich " + korekt + "% Übereinstimmung");  //wenn die Variable am Ende noch bei 100 ist sind beide Text Dateien gleich.
             else Console.WriteLine("Ergebnis: Kalender sind verschieden, " + korekt + "% Übereinstimmung"); //die Variabel korekt entspricht in etwar der Übeinstimmung in %
             //------------ Ende TEST Code --------------------------------------------------------------------------
-
-            //Erwartet Eingabe vor Beendigung des Programms
-            Console.ReadLine();
-            return 0;
-        } //ende main()
+        }
     } //ende class KalenderErzeuger
 } //ende namespace KalenderWelt

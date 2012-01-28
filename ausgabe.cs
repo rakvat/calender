@@ -199,9 +199,11 @@ namespace KalenderWelt
 
     public class TageszeilenAusgabe : Ausgabe
     {
-        public TageszeilenAusgabe(ref KalenderJahr dasJahr, int eingabemodus)
+        bool _mitEintraegen = false;
+        public TageszeilenAusgabe(ref KalenderJahr dasJahr, int eingabemodus, bool mitEintraegen)
             : base(ref dasJahr, eingabemodus)
         {
+            _mitEintraegen = mitEintraegen;
         }
 
         public override void gibAus()
@@ -216,8 +218,12 @@ namespace KalenderWelt
                 foreach (Tag tag in monat.GibTage())
                 {
                     int wochentag = tag.GibWochentag();
-                    gibZeileAus(HilfsKonstrukte.wochenTagNamenKurz[wochentag] + 
-                                " " + tag.GibIndex().ToString().PadLeft(3));
+                    string tagstring = HilfsKonstrukte.wochenTagNamenKurz[wochentag] + 
+                                        " " + tag.GibIndex().ToString().PadLeft(3);
+                    if (_mitEintraegen) {
+                        tagstring += "  " + tag.EintraegeAlsString();
+                    }
+                    gibZeileAus(tagstring);
                     if (wochentag == 6)
                     {
                         gibZeileAus("---------------------");

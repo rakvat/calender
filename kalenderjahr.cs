@@ -71,6 +71,14 @@ namespace KalenderWelt
             }
             return wochenTag;
         }
+
+        public void TrageEin(ref List<Eintrag> dieEintraege) 
+        {
+            foreach (Eintrag eintrag in dieEintraege) 
+            {
+                eintrag.TrageEinIn(this);
+            }
+        }
     }
 
     public class Monat 
@@ -137,7 +145,7 @@ namespace KalenderWelt
             return _index;
         }
 
-        public void TrageEin(ref Eintrag derEintrag)
+        public void TrageEin(Eintrag derEintrag)
         {
             _eintraege.Add(derEintrag);
         }
@@ -147,7 +155,7 @@ namespace KalenderWelt
             string meineEintraege = "";
             for (int i = 0, l = _eintraege.Count; i < l; ++i)
             {
-                meineEintraege += _eintraege[i].toString();
+                meineEintraege += _eintraege[i].GibTitel();
                 if (i != _eintraege.Count - 1) 
                 {
                     meineEintraege += ", ";
