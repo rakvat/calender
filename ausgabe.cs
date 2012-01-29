@@ -35,9 +35,10 @@ namespace KalenderWelt
             jahr = Dateiname;
             Dateiname = jahr.Insert(0, "Kalender");
 
-            if (_modus == 1) Dateiname = Dateiname.Insert(0, "1");
-            if (_modus == 2) Dateiname = Dateiname.Insert(0, "2");
-            if (_modus == 3) Dateiname = Dateiname.Insert(0, "3");
+            if (_modus == 1) Dateiname = Dateiname.Insert(0, "1"); //Monatsblock einspaltig
+            if (_modus == 2) Dateiname = Dateiname.Insert(0, "2"); //Monatsblock zweispaltig
+            if (_modus == 3) Dateiname = Dateiname.Insert(0, "3"); //Tageszeilen ohne Einträge
+            if (_modus == 4) Dateiname = Dateiname.Insert(0, "4"); //Tageszeilen mit Einträge
 
             if (!System.IO.Directory.Exists("kalenderausgabe/"))
             {

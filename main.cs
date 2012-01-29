@@ -155,31 +155,37 @@ namespace KalenderWelt
             int korekt = 100, zeilen1 = 0, zeilen2 = 0;
 
             string fileName = "kalenderausgabe/" + eingabemodus + "Kalender" + eingabejahr + ".txt";
-            if (!File.Exists(fileName)) {
-                Console.WriteLine("test file '" + fileName + "' not found");
+            if (!File.Exists(fileName)) //prüfen ob .txt Datei vorhanden ist
+            {
+                Console.WriteLine("Eingabe Datei '" + fileName + "' nicht gefunden.");
                 return;
             }
             FileStream fs = new FileStream(fileName, FileMode.Open);  //angegebene Text Datei öffnen
             StreamReader sr = new StreamReader(fs);      //streamrader anlegen
             while (sr.Peek() >= 0)                     //Text Datei auslesen solange etwas vorhanden ist
-            //for (int i = 0; i < 100; i++)
             {
-                eingabetext[zeilen1] = sr.ReadLine();                     //Text Datei Inhalt in Veriable übertragen 
+                eingabetext[zeilen1] = sr.ReadLine();                //Text Datei Inhalt in Veriable übertragen 
                 zeilen1++;                                           //ermitteln der Datei länge, wichtig für Vergleich mit for Schleife
                 //   MessageBox.Show(eingabe[i]);                    //Inhalt anzeigen    
             }
-            sr.Close(); //Datei schliesen  
+            sr.Close(); //Eingabe Datei schliesen  
 
-            FileStream fs2 = new FileStream("test/" + eingabemodus + "Kalender" + eingabejahr + ".txt", FileMode.Open);  //angegebene Text Datei öffnen
-            StreamReader sr2 = new StreamReader(fs2);      //streamrader anlegen
-            while (sr2.Peek() >= 0)                     //Text Datei auslesen solange etwas vorhanden ist
-            //for (int i = 0; i < 100; i++)
+
+            fileName = "test/" + eingabemodus + "Kalender" + eingabejahr + ".txt";
+            if (!File.Exists(fileName)) //prüfen ob .txt Datei vorhanden ist
             {
-                mustertext[zeilen2] = sr2.ReadLine();                    //Text Datei Inhalt in Veriable übertragen
-                zeilen2++;
-                // MessageBox.Show(muster[i]);                    //Inhalt anzeigen 
+                Console.WriteLine("Test Datei '" + fileName + "' nicht gefunden.");
+                return;
             }
-            sr2.Close(); //Datei schliesen  
+            FileStream fs2 = new FileStream("test/" + eingabemodus + "Kalender" + eingabejahr + ".txt", FileMode.Open);  //angegebene Text Datei öffnen
+            StreamReader sr2 = new StreamReader(fs2);   //streamrader anlegen
+            while (sr2.Peek() >= 0)                     //Text Datei auslesen solange etwas vorhanden ist
+            {
+                mustertext[zeilen2] = sr2.ReadLine();                 //Text Datei Inhalt in Veriable übertragen
+                zeilen2++;                                            //ermitteln der Datei länge, wichtig für Vergleich mit for Schleife
+                // MessageBox.Show(muster[i]);                        //Inhalt anzeigen 
+            }
+            sr2.Close(); //Test Datei schliesen  
 
             for (zeilen1 = 0; zeilen1 < zeilen2; zeilen1++) //Vergleich läuft so lange wie Daten vorhanden sind
             {
