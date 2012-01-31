@@ -6,14 +6,29 @@ using System.Xml.XPath;
 
 namespace KalenderWelt
 {
+
     class KalenderErzeuger
     {
 
-        public static int Main()
+        public static int Main(string[] args)
         {
+            bool debug = false;
+            int eingabejahr = 0;
+            int eingabemodus = 0;
 
-            int eingabejahr;
-            int eingabemodus;
+            if (args.Length == 0) //Wenn keine Argumente übergeben werden Anzeige Normaler Start
+            {
+                Console.WriteLine("Normaler Programm Start");
+                debug = false;
+            }
+            else
+            {
+                if (args[0] == "debug") //Wenn Argument übergeben worden, prüfen ob debug erwünscht ist
+                {
+                    Console.WriteLine("Programm Start mit debug Mode. Anzahl der übergebenen Parameter: " + args.Length);
+                    debug = true;
+                }
+            }
 
             Console.WriteLine("Das Programm berechnet Kalender für die Jahre 1583 bis 4000");
             Console.Write("Jahr eingeben:  ");
@@ -66,8 +81,7 @@ namespace KalenderWelt
 
 
             //Eintrag Experimente
-            List<Eintrag> eintraege = leseEintraege();
-                
+            List<Eintrag> eintraege = leseEintraege(debug); //Aufruf der leseEintraege Funktion mit Übergabe der debug Variablen
 
             KalenderJahr kalenderJahr = new KalenderJahr(eingabejahr);
             kalenderJahr.TrageEin(ref eintraege);
@@ -86,17 +100,16 @@ namespace KalenderWelt
             }
             ausgabe.gibAus();
 
-            ausgabeTest(eingabejahr, eingabemodus);
+            ausgabeTest(eingabejahr, eingabemodus, debug); //Aufruf der Testfunktion mit Übergabe der debug Variable
 
             //Erwartet Eingabe vor Beendigung des Programms
             Console.ReadLine();
             return 0;
         } //ende main()
 
-                
-        static List<Eintrag> leseEintraege() 
-        {
 
+        static List<Eintrag> leseEintraege(bool debug)
+        {
             List<Eintrag> meineEintraege = new List<Eintrag>();
             if (!System.IO.Directory.Exists("input/"))
             {
@@ -107,9 +120,9 @@ namespace KalenderWelt
 
             string[] eintragTypen = {"JaehrlichesEreignisAnFestemTag", 
                                      "EinmaligerTermin"};
-            string eintragVerzeichnis = @"input/"; 
+            string eintragVerzeichnis = @"input/";
             DirectoryInfo d = new DirectoryInfo(eintragVerzeichnis);
-            foreach (FileInfo f in d.GetFiles("*.xml")) 
+            foreach (FileInfo f in d.GetFiles("*.xml"))
             {
                 Console.WriteLine("Lese Eintraege aus " + f.Name + ";  " + f.Length + "; " + f.CreationTime);
                 XmlDocument doc = new XmlDocument();  //aus xml laden
@@ -119,7 +132,7 @@ namespace KalenderWelt
                 for (int i = 0; i < eintragTypen.Length; ++i)
                 {
                     string xmlNodeName = eintragTypen[i];
-                    XmlNodeList eintragListe = wurzel.SelectNodes("./"+xmlNodeName);
+                    XmlNodeList eintragListe = wurzel.SelectNodes("./" + xmlNodeName);
                     Console.WriteLine("\nAnzahl der " + xmlNodeName + " in der xml Datei " + f.Name + ": " + eintragListe.Count);
                     foreach (XmlNode eintrag in eintragListe)
                     {
@@ -134,20 +147,23 @@ namespace KalenderWelt
                                 meineEintraege.Add(
                                     new EinmaligerTermin(titel, eintrag));
                                 break;
-                        }
-                    }
-                }
-            }
+                        } //ende switch
+                    } //ende foreach XmlNode
+                } //ende for Schleife
+            } //ende foreach fileinfo
 
             //fuer debug
-            //foreach (Eintrag meinEintrag in eintraege)
+            //if (debug == true)
             //{
-            //    Console.WriteLine("Eintrag: " + meinEintrag.toString());
+            //    foreach (Eintrag meinEintrag in eintraege)
+            //    {
+            //        Console.WriteLine("debug info Eintrag: " + meinEintrag.toString());
+            //    }
             //}
             return meineEintraege;
-        }
+        } //ende leseEintraege
 
-        static void ausgabeTest(int eingabejahr, int eingabemodus) 
+        static void ausgabeTest(int eingabejahr, int eingabemodus, bool debug)
         {
             //----------Anfang TEST Code zum vergleichen des erzeugten Kalenders mit dem im Verzeichnis /test abgeletem Muster ------------
             string[] eingabetext = new string[600];
@@ -187,6 +203,12 @@ namespace KalenderWelt
             }
             sr2.Close(); //Test Datei schliesen  
 
+            if (debug == true)
+            {
+                Console.WriteLine("debug info: Anzahl der Zeilen in Eingabe Datei " + zeilen1);
+                Console.WriteLine("debug info: Anzahl der Zeilen in Test Datei " + zeilen2);
+            }
+
             for (zeilen1 = 0; zeilen1 < zeilen2; zeilen1++) //Vergleich läuft so lange wie Daten vorhanden sind
             {
                 if (eingabetext[zeilen1].Equals(mustertext[zeilen1])) korekt = korekt - 0; //bei jedem Fehler der beim Vergleich auftritt 1 abziehen
@@ -200,6 +222,6 @@ namespace KalenderWelt
             if (korekt == 100) Console.WriteLine("Ergebnis: Kalender sind gleich " + korekt + "% Übereinstimmung");  //wenn die Variable am Ende noch bei 100 ist sind beide Text Dateien gleich.
             else Console.WriteLine("Ergebnis: Kalender sind verschieden, " + korekt + "% Übereinstimmung"); //die Variabel korekt entspricht in etwar der Übeinstimmung in %
             //------------ Ende TEST Code --------------------------------------------------------------------------
-        }
+        } //ende ausgbabeTest
     } //ende class KalenderErzeuger
 } //ende namespace KalenderWelt
