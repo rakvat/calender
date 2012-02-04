@@ -1,8 +1,11 @@
+//#define DEBUG
+
 using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.XPath;
+
 
 namespace KalenderWelt
 {
@@ -100,7 +103,9 @@ namespace KalenderWelt
             }
             ausgabe.gibAus();
 
+#if DEBUG
             ausgabeTest(eingabejahr, eingabemodus, debug); //Aufruf der Testfunktion mit Übergabe der debug Variable
+#endif
 
             //Erwartet Eingabe vor Beendigung des Programms
             Console.ReadLine();
@@ -163,6 +168,7 @@ namespace KalenderWelt
             return meineEintraege;
         } //ende leseEintraege
 
+#if DEBUG
         static void ausgabeTest(int eingabejahr, int eingabemodus, bool debug)
         {
             //----------Anfang TEST Code zum vergleichen des erzeugten Kalenders mit dem im Verzeichnis /test abgeletem Muster ------------
@@ -223,5 +229,6 @@ namespace KalenderWelt
             else Console.WriteLine("Ergebnis: Kalender sind verschieden, " + korekt + "% Übereinstimmung"); //die Variabel korekt entspricht in etwar der Übeinstimmung in %
             //------------ Ende TEST Code --------------------------------------------------------------------------
         } //ende ausgbabeTest
+#endif
     } //ende class KalenderErzeuger
 } //ende namespace KalenderWelt
