@@ -114,6 +114,22 @@ namespace KalenderWelt
             positionDezember = text.IndexOf('\n', positionDezember);
             Assert.AreEqual(text.IndexOf(wochenTagAlsString, positionDezember), positionDezember + 1);
         }
+
+        public void EintraeigeInTageszeilenAusgabe () 
+        {
+            KalenderJahr jahr = new KalenderJahr(2012);
+            int eingabemodus = 4;   //XXX: das sollte nicht nötig sein
+            Ausgabe ausgabe = new TageszeilenAusgabe(ref jahr, eingabemodus, false);
+            ausgabe.setzeTestModus(true);
+            ausgabe.gibAus();
+            StreamReader streamReader = new StreamReader(ausgabe.DateiName);
+            string text = streamReader.ReadToEnd();
+            streamReader.Close();
+
+            Assert.IsTrue(text.Length > 0);
+            Assert.IsTrue(text.IndexOf("2012") > -1);
+
+        }
     }
 }
 

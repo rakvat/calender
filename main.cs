@@ -116,55 +116,22 @@ namespace KalenderWelt
         static List<Eintrag> leseEintraege(bool debug)
         {
             List<Eintrag> meineEintraege = new List<Eintrag>();
-            if (!System.IO.Directory.Exists("input/"))
+            if (!System.IO.Directory.Exists(Eintrag.INPUT_DIR))
             {
-                Directory.CreateDirectory("input"); //anlegen des Ordners wenn nicht vorhanden
                 Console.WriteLine("xml Dateien nicht gefunden.");
                 return meineEintraege;
             }
 
-            string[] eintragTypen = {"JaehrlichesEreignisAnFestemTag", 
-                                     "EinmaligerTermin"};
-            string eintragVerzeichnis = @"input/";
-            DirectoryInfo d = new DirectoryInfo(eintragVerzeichnis);
-            foreach (FileInfo f in d.GetFiles("*.xml"))
-            {
-                Console.WriteLine("Lese Eintraege aus " + f.Name + ";  " + f.Length + "; " + f.CreationTime);
-                XmlDocument doc = new XmlDocument();  //aus xml laden
-                doc.Load(eintragVerzeichnis + "/" + f.Name);
-                XmlElement wurzel = doc.DocumentElement;
-
-                for (int i = 0; i < eintragTypen.Length; ++i)
-                {
-                    string xmlNodeName = eintragTypen[i];
-                    XmlNodeList eintragListe = wurzel.SelectNodes("./" + xmlNodeName);
-                    Console.WriteLine("\nAnzahl der " + xmlNodeName + " in der xml Datei " + f.Name + ": " + eintragListe.Count);
-                    foreach (XmlNode eintrag in eintragListe)
-                    {
-                        string titel = eintrag.Attributes["titel"].Value;
-                        switch (xmlNodeName)
-                        {
-                            case "JaehrlichesEreignisAnFestemTag":
-                                meineEintraege.Add(
-                                    new JaehrlichesEreignisAnFestemTag(titel, eintrag));
-                                break;
-                            case "EinmaligerTermin":
-                                meineEintraege.Add(
-                                    new EinmaligerTermin(titel, eintrag));
-                                break;
-                        } //ende switch
-                    } //ende foreach XmlNode
-                } //ende for Schleife
-            } //ende foreach fileinfo
+            meineEintraege = Eintrag.LeseEintraegeAusVerzeichnis(Eintrag.INPUT_DIR);
 
             //fuer debug
-            //if (debug == true)
-            //{
-            //    foreach (Eintrag meinEintrag in eintraege)
-            //    {
-            //        Console.WriteLine("debug info Eintrag: " + meinEintrag.toString());
-            //    }
-            //}
+            if (debug == true)
+            {
+                foreach (Eintrag meinEintrag in meineEintraege)
+                {
+                    Console.WriteLine("debug info Eintrag: " + meinEintrag.toString());
+                }
+            }
             return meineEintraege;
         } //ende leseEintraege
 
