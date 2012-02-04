@@ -6,7 +6,13 @@ namespace KalenderWelt
 {
     public abstract class Ausgabe
     {
+        //const members are static in c#
+        public const string AUSGABE_DIR = "ausgabe/";
+        public const string TEST_AUSGABE_DIR = "testausgabe/";
+
+        private string _dateiName;
         private StreamWriter _streamWriter;
+        private bool _testModus;
         protected KalenderJahr _jahr;
         protected int _modus;
 
@@ -14,6 +20,19 @@ namespace KalenderWelt
         {
             _jahr = dasJahr;
             _modus = eingabemodus;
+        }
+
+        public void setzeTestModus (bool derModus) 
+        {
+            _testModus = derModus;
+        }
+
+        public string DateiName
+        {
+           get 
+           {
+              return _dateiName; 
+           }
         }
 
         protected void gibZeileAus() //erzeugt Leere Zeilen, ohne übergabewert
@@ -24,7 +43,9 @@ namespace KalenderWelt
         protected void gibZeileAus(string dieZeile) //gibt zusammengebaute Kalenderzeilen aus, mit übergabewert
         {
             _streamWriter.WriteLine(dieZeile);
-            Console.WriteLine(dieZeile);
+            if (!_testModus) {
+                Console.WriteLine(dieZeile);
+            }
         }
 
         protected void oeffneStream(int eingabemodus)
@@ -40,11 +61,13 @@ namespace KalenderWelt
             if (_modus == 3) Dateiname = Dateiname.Insert(0, "3"); //Tageszeilen ohne Einträge
             if (_modus == 4) Dateiname = Dateiname.Insert(0, "4"); //Tageszeilen mit Einträge
 
-            if (!System.IO.Directory.Exists("kalenderausgabe/"))
+            FileInfo f;
+            if (_testModus) 
             {
-                Directory.CreateDirectory("kalenderausgabe"); //anlegen des Ordners wenn nicht vorhanden
+                f = erzeugeFileInfo(Ausgabe.TEST_AUSGABE_DIR, Dateiname);
+            } else {
+                f = erzeugeFileInfo(Ausgabe.AUSGABE_DIR, Dateiname);
             }
-            FileInfo f = new FileInfo("kalenderausgabe/" + Dateiname); //Text Datei anlegen 
             _streamWriter = f.CreateText();
         }
 
@@ -54,6 +77,17 @@ namespace KalenderWelt
         }
 
         public abstract void gibAus();
+
+        private FileInfo erzeugeFileInfo(string dasVerzeichnis, string derDateiname) 
+        {
+            if (!System.IO.Directory.Exists(dasVerzeichnis))
+            {
+                Directory.CreateDirectory(dasVerzeichnis); //anlegen des Ordners wenn nicht vorhanden
+            }
+            _dateiName = dasVerzeichnis + derDateiname;
+            FileInfo f = new FileInfo(_dateiName); //Text Datei anlegen 
+            return f;
+        }
     }
 
     public class MonatsBlockAusgabe : Ausgabe

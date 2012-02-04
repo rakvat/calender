@@ -3,7 +3,8 @@
 *.exe
 *.dll
 *.sln
-kalenderausgabe
+ausgabe
+testausgabe
 TestResult.xml
 _builds
 calender

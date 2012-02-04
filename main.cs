@@ -1,4 +1,4 @@
-//#define DEBUG
+#define DEBUG
 
 using System;
 using System.IO;
@@ -171,12 +171,12 @@ namespace KalenderWelt
 #if DEBUG
         static void ausgabeTest(int eingabejahr, int eingabemodus, bool debug)
         {
-            //----------Anfang TEST Code zum vergleichen des erzeugten Kalenders mit dem im Verzeichnis /test abgeletem Muster ------------
+            //----------Anfang TEST Code zum vergleichen des erzeugten Kalenders mit dem im Verzeichnis /testfixtures abgeletem Muster ------------
             string[] eingabetext = new string[600];
             string[] mustertext = new string[600];
             int korekt = 100, zeilen1 = 0, zeilen2 = 0;
 
-            string fileName = "kalenderausgabe/" + eingabemodus + "Kalender" + eingabejahr + ".txt";
+            string fileName = Ausgabe.AUSGABE_DIR + eingabemodus + "Kalender" + eingabejahr + ".txt";
             if (!File.Exists(fileName)) //prüfen ob .txt Datei vorhanden ist
             {
                 Console.WriteLine("Eingabe Datei '" + fileName + "' nicht gefunden.");
@@ -193,13 +193,13 @@ namespace KalenderWelt
             sr.Close(); //Eingabe Datei schliesen  
 
 
-            fileName = "test/" + eingabemodus + "Kalender" + eingabejahr + ".txt";
+            fileName = "testfixtures/" + eingabemodus + "Kalender" + eingabejahr + ".txt";
             if (!File.Exists(fileName)) //prüfen ob .txt Datei vorhanden ist
             {
                 Console.WriteLine("Test Datei '" + fileName + "' nicht gefunden.");
                 return;
             }
-            FileStream fs2 = new FileStream("test/" + eingabemodus + "Kalender" + eingabejahr + ".txt", FileMode.Open);  //angegebene Text Datei öffnen
+            FileStream fs2 = new FileStream(fileName, FileMode.Open);  //angegebene Text Datei öffnen
             StreamReader sr2 = new StreamReader(fs2);   //streamrader anlegen
             while (sr2.Peek() >= 0)                     //Text Datei auslesen solange etwas vorhanden ist
             {
