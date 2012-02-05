@@ -19,7 +19,10 @@ debug:
 	./_builds/kalender.exe debug
 
 runtest:
+	rm -rf _builds/testfixtures
+	cd _builds && ln -s ../testfixtures . && cd ..
 	nunit-console _builds/test.dll
+	rm -rf _builds/testfixtures
 
 clean:
 	rm -rf _builds

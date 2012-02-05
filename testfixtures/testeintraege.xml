@@ -1,0 +1,17 @@
+<?xml version="1.0" ?> 
+<kalendereintraege>
+    <JaehrlichesEreignisAnFestemTag titel="Januar Geburtstag">
+        <monat>1</monat>
+        <tag>30</tag>
+    </JaehrlichesEreignisAnFestemTag>
+    <JaehrlichesEreignisAnFestemTag titel="Dezember Geburtstag">
+        <monat>12</monat>
+        <tag>30</tag>
+    </JaehrlichesEreignisAnFestemTag>
+    <EinmaligerTermin titel="Termin">
+        <jahr>2012</jahr>
+        <monat>2</monat>
+        <tag>23</tag>
+    </EinmaligerTermin>
+</kalendereintraege>
+

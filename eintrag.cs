@@ -29,8 +29,13 @@ namespace KalenderWelt
         public static List<Eintrag> LeseEintraegeAusDatei(string dieDatei)
         {
             List<Eintrag> meineEintraege = new List<Eintrag>();
+            if (!File.Exists(dieDatei))
+            {
+                Console.WriteLine("[Eintrag.LeseEintraegeAusDatei] Datei " + dieDatei + " nicht gefunden");
+                return meineEintraege;
+            }
             XmlDocument doc = new XmlDocument();  //aus xml laden
-            doc.Load(Eintrag.INPUT_DIR + dieDatei);
+            doc.Load(dieDatei);
             XmlElement wurzel = doc.DocumentElement;
 
             for (int i = 0; i < Eintrag.EINTRAG_TYPEN.Length; ++i)
@@ -64,7 +69,7 @@ namespace KalenderWelt
             foreach (FileInfo f in d.GetFiles("*.xml"))
             {
                 Console.WriteLine("Lese Eintraege aus " + f.Name + ";  " + f.Length + "; " + f.CreationTime);
-                List<Eintrag> neueEintraege = Eintrag.LeseEintraegeAusDatei(f.Name);
+                List<Eintrag> neueEintraege = Eintrag.LeseEintraegeAusDatei(dasVerzeichnis + f.Name);
                 meineEintraege.AddRange(neueEintraege);
             } //ende foreach fileinfo
             return meineEintraege;
@@ -139,6 +144,8 @@ namespace KalenderWelt
             return _tag + "." + _monat + ".: " + _titel;
         }
 
+        //TODO: was passiert mit inkorrekten Daten
+        //was passiert mit Ereignissen vom 29.2. in nicht-Schaltjahren?
         public override void TrageEinIn(KalenderJahr dasJahr) 
         {
             dasJahr.GibMonate()[_monat-1].GibTage()[_tag-1].TrageEin(this);

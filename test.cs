@@ -1,6 +1,8 @@
 using NUnit.Framework;
 using System;
 using System.IO;
+using System.Collections.Generic;
+
 
 //http://kalender-365.de
 namespace KalenderWelt
@@ -115,11 +117,14 @@ namespace KalenderWelt
             Assert.AreEqual(text.IndexOf(wochenTagAlsString, positionDezember), positionDezember + 1);
         }
 
-        public void EintraeigeInTageszeilenAusgabe () 
+        [Test]
+        public void EintraegeInTageszeilenAusgabe () 
         {
             KalenderJahr jahr = new KalenderJahr(2012);
+            List<Eintrag> meineEintraege = Eintrag.LeseEintraegeAusDatei("testfixtures/testeintraege.xml");
+            jahr.TrageEin(ref meineEintraege);
             int eingabemodus = 4;   //XXX: das sollte nicht nötig sein
-            Ausgabe ausgabe = new TageszeilenAusgabe(ref jahr, eingabemodus, false);
+            Ausgabe ausgabe = new TageszeilenAusgabe(ref jahr, eingabemodus, true);
             ausgabe.setzeTestModus(true);
             ausgabe.gibAus();
             StreamReader streamReader = new StreamReader(ausgabe.DateiName);
@@ -128,7 +133,23 @@ namespace KalenderWelt
 
             Assert.IsTrue(text.Length > 0);
             Assert.IsTrue(text.IndexOf("2012") > -1);
-
+            int positionJanGeburtstag = text.IndexOf("Januar Geburtstag");
+            int positionDezGeburtstag = text.IndexOf("Dezember Geburtstag");
+            int positionTermin = text.IndexOf("Termin");
+            Assert.IsTrue(positionJanGeburtstag > -1);
+            Assert.IsTrue(positionDezGeburtstag > -1);
+            Assert.IsTrue(positionTermin > -1);
+            
+            Assert.IsTrue(text[positionJanGeburtstag-4] == '3' &&
+                          text[positionJanGeburtstag-3] == '0');
+            Assert.IsTrue(text[positionDezGeburtstag-4] == '3' &&
+                          text[positionDezGeburtstag-3] == '0');
+            Assert.IsTrue(text[positionTermin-4] == '2' &&
+                          text[positionTermin-3] == '3');
+            int positionFebruar = text.IndexOf(HilfsKonstrukte.monatsNamen[1]);
+            int positionMaerz = text.IndexOf(HilfsKonstrukte.monatsNamen[2]);
+            Assert.IsTrue(positionTermin > positionFebruar &&
+                          positionTermin < positionMaerz);
         }
     }
 }
