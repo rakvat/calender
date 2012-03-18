@@ -16,9 +16,6 @@ namespace KalenderWelt
             int tageImJahr = HilfsKonstrukte.TAGE_IM_JAHR;
             if (IstSchaltjahr()) {
                 ++tageImJahr;
-                //XXX: dies sollte nur lokal und nicht in den Hilfskonstrukten
-                //gesetzt werden
-                HilfsKonstrukte.tageImMonat[1] = 29;
             }
             int wochenTag = StartWochenTag();
             int monat = 0;
@@ -34,7 +31,7 @@ namespace KalenderWelt
                 _monate[monat].FuegeTagAn(ref meinTag);
                 wochenTag = (++wochenTag) % HilfsKonstrukte.TAGE_PRO_WOCHE;
                 tagImMonat++;
-                if (tagImMonat == HilfsKonstrukte.tageImMonat[monat]) {
+                if (tagImMonat == HilfsKonstrukte.TageImMonat(monat+1, _jahr)) {
                     monat++;
                     tagImMonat = 0;
                 }
@@ -64,7 +61,7 @@ namespace KalenderWelt
             //15.10.1582 (Korrekturtag) war Fr
             //-> 1.1.1583 Sa=5
             int wochenTag = 5;
-            for (int i = 1583; i < _jahr; ++i) 
+            for (int i = HilfsKonstrukte.MIN_JAHR; i < _jahr; ++i) 
             {
                 wochenTag += HilfsKonstrukte.TAGE_IM_JAHR + (HilfsKonstrukte.IstSchaltjahr(i) ? 1 : 0);
                 wochenTag %= 7;

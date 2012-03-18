@@ -83,22 +83,26 @@ namespace KalenderWelt
         [Test]
         public void EinmaligerTermin () 
         {
-            KalenderJahr jahr = new KalenderJahr(2012);
             List<Eintrag> meineEintraege = Eintrag.LeseEintraegeAusDatei("testfixtures/testeintraege.xml");
-            jahr.TrageEin(ref meineEintraege);
 
-            Assert.AreEqual(jahr.GibMonate()[1].GibTage()[22].EintraegeAlsString(), "Termin");
-            teste, ob nicht in anderem Jahr eingetragen
-            jahr = new KalenderJahr(2013);
-            meineEintraege = Eintrag.LeseEintraegeAusDatei("testfixtures/testeintraege.xml");
-            jahr.TrageEin(ref meineEintraege);
+            KalenderJahr jahr2012 = new KalenderJahr(2012);
+            jahr2012.TrageEin(ref meineEintraege);
+            Assert.AreEqual(jahr2012.GibMonate()[1].GibTage()[22].EintraegeAlsString(), "Termin");
+            
+            //teste, ob nicht in anderem Jahr eingetragen
+            KalenderJahr jahr2013 = new KalenderJahr(2013);
+            jahr2013.TrageEin(ref meineEintraege);
+            Assert.AreEqual(jahr2013.GibMonate()[1].GibTage()[22].EintraegeAlsString(), "");
 
-            Assert.AreEqual(jahr.GibMonate()[1].GibTage()[22].EintraegeAlsString(), "");
+            Assert.IsTrue(jahr2012.GibMonate()[1].GibTage()[28].EintraegeAlsString().Contains("Schalttagtermin"), "Schalttagtermin wurde nicht korrekt eingetragen");
+            //Eimalige Termine sollen nicht auf den 28ten übertragen werden sondern als nicht valide ignoriert werden
+            Assert.IsFalse(jahr2013.GibMonate()[1].GibTage()[27].EintraegeAlsString().Contains("Schalttagtermin in nicht Schaltjahr"), "Einmalige Termine wurde auf den 28ten übetragen, soll aber als nicht valide gelten");
         }
 
         [Test]
         public void JaehrlichesEreignisAnFestemTermin () 
         {
+            //TODO
         }
     }
 
@@ -117,16 +121,16 @@ namespace KalenderWelt
             string text = streamReader.ReadToEnd();
             streamReader.Close();
 
-            Assert.IsTrue(text.Length > 0);
-            Assert.IsTrue(text.IndexOf("2012") > -1);
+            Assert.IsTrue(text.Length > 0, "Ausgabe ist leer");
+            Assert.IsTrue(text.IndexOf("2012") > -1, "Jahreszahl fehlt");
             int positionFebruar = text.IndexOf(HilfsKonstrukte.monatsNamen[1]);
             int positionMaerz = text.IndexOf(HilfsKonstrukte.monatsNamen[2]);
-            Assert.IsTrue(positionFebruar > -1);
-            Assert.IsTrue(positionMaerz > -1);
+            Assert.IsTrue(positionFebruar > -1, "Februar-Markierung fehlt");
+            Assert.IsTrue(positionMaerz > -1, "März-Markierung fehlt");
             Assert.IsTrue(positionFebruar < positionMaerz);
 
             //pruefe ob Februar 29 Tage hat
-            Assert.IsTrue(text.IndexOf("29",positionFebruar) < positionMaerz);
+            Assert.IsTrue(text.IndexOf("29",positionFebruar) < positionMaerz, "29 fehlt im Februar");
 
             //pruefe ob Linie nach Sonntag
             int positionSO = text.IndexOf(HilfsKonstrukte.wochenTagNamenKurz[6], positionMaerz);
@@ -155,25 +159,25 @@ namespace KalenderWelt
             string text = streamReader.ReadToEnd();
             streamReader.Close();
 
-            Assert.IsTrue(text.Length > 0);
-            Assert.IsTrue(text.IndexOf("2012") > -1);
+            Assert.IsTrue(text.Length > 0, "Ausgabe ist leer");
+            Assert.IsTrue(text.IndexOf("2012") > -1, "Jahreszahl kommt nicht vor");
             int positionJanGeburtstag = text.IndexOf("Januar Geburtstag");
             int positionDezGeburtstag = text.IndexOf("Dezember Geburtstag");
             int positionTermin = text.IndexOf("Termin");
-            Assert.IsTrue(positionJanGeburtstag > -1);
-            Assert.IsTrue(positionDezGeburtstag > -1);
-            Assert.IsTrue(positionTermin > -1);
+            Assert.IsTrue(positionJanGeburtstag > -1, "JanuarGeburtstag ist nicht eingetragen");
+            Assert.IsTrue(positionDezGeburtstag > -1, "DezemberGeburtstag ist nicht eingetragen");
+            Assert.IsTrue(positionTermin > -1, "Termin ist nicht eingetragen");
             
             Assert.IsTrue(text[positionJanGeburtstag-4] == '3' &&
-                          text[positionJanGeburtstag-3] == '0');
+                          text[positionJanGeburtstag-3] == '0', "JanuarGeburtstag steht an der falschen Stelle");
             Assert.IsTrue(text[positionDezGeburtstag-4] == '3' &&
-                          text[positionDezGeburtstag-3] == '0');
+                          text[positionDezGeburtstag-3] == '0', "DezemberGeburtstag steht an der falschen Stelle");
             Assert.IsTrue(text[positionTermin-4] == '2' &&
-                          text[positionTermin-3] == '3');
+                          text[positionTermin-3] == '3', "Termin steht an der falschen Stelle");
             int positionFebruar = text.IndexOf(HilfsKonstrukte.monatsNamen[1]);
             int positionMaerz = text.IndexOf(HilfsKonstrukte.monatsNamen[2]);
             Assert.IsTrue(positionTermin > positionFebruar &&
-                          positionTermin < positionMaerz);
+                          positionTermin < positionMaerz, "Termin steht an der falschen Stelle");
         }
     }
 }

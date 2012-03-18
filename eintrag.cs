@@ -7,6 +7,18 @@ using System.Xml.XPath;
 
 namespace KalenderWelt
 {
+    public class EintragParseException : System.ApplicationException
+    {
+        public EintragParseException() {}
+        public EintragParseException(string message) 
+        {
+            Console.WriteLine("EintragParseException: " + message);
+        }
+        public EintragParseException(string message, System.Exception inner) {}
+        protected EintragParseException(System.Runtime.Serialization.SerializationInfo info,
+            System.Runtime.Serialization.StreamingContext context) {}
+    }
+
     public abstract class Eintrag 
     {
         public const string INPUT_DIR = "input/";
@@ -48,17 +60,25 @@ namespace KalenderWelt
                 foreach (XmlNode eintrag in eintragListe)
                 {
                     string titel = eintrag.Attributes["titel"].Value;
-                    switch (xmlNodeName)
+                    Eintrag neuerEintrag;
+                    try 
                     {
-                        case "JaehrlichesEreignisAnFestemTag":
-                            meineEintraege.Add(
-                                new JaehrlichesEreignisAnFestemTag(titel, eintrag));
-                            break;
-                        case "EinmaligerTermin":
-                            meineEintraege.Add(
-                                new EinmaligerTermin(titel, eintrag));
-                            break;
-                    } //ende switch
+                        switch (xmlNodeName)
+                        {
+                            case "JaehrlichesEreignisAnFestemTag":
+                                neuerEintrag = new JaehrlichesEreignisAnFestemTag(titel, eintrag);
+                                meineEintraege.Add(neuerEintrag);
+                                break;
+                            case "EinmaligerTermin":
+                                neuerEintrag = new EinmaligerTermin(titel, eintrag);
+                                meineEintraege.Add(neuerEintrag);
+                                break;
+                        } //ende switch
+                    }
+                    catch (EintragParseException )
+                    {
+                        Console.WriteLine("Eintrag kann nicht hinzugefügt werden");
+                    }
                 } //ende foreach XmlNode
             } //ende for Schleife
             return meineEintraege;
@@ -92,19 +112,33 @@ namespace KalenderWelt
             : base(derTitel)
         {
             int jahr, monat, tag;
-            Console.WriteLine("1");
-            jahr = HilfsKonstrukte.KonvertiereZuInt(
-                    derKnoten.SelectSingleNode("./jahr").FirstChild.Value, 
-                    "Jahr");
-            monat = HilfsKonstrukte.KonvertiereZuInt(
-                    derKnoten.SelectSingleNode("./monat").FirstChild.Value, 
-                    "Monat");
-            tag = HilfsKonstrukte.KonvertiereZuInt(
-                    derKnoten.SelectSingleNode("./tag").FirstChild.Value, 
-                    "Tag");
-            Console.WriteLine("2");
+            try 
+            {
+                jahr = HilfsKonstrukte.KonvertiereZuInt(
+                        derKnoten.SelectSingleNode("./jahr").FirstChild.Value, 
+                        "Jahr");
+                monat = HilfsKonstrukte.KonvertiereZuInt(
+                        derKnoten.SelectSingleNode("./monat").FirstChild.Value, 
+                        "Monat");
+                tag = HilfsKonstrukte.KonvertiereZuInt(
+                        derKnoten.SelectSingleNode("./tag").FirstChild.Value, 
+                        "Tag");
+            } 
+            catch (KeineZahlException )
+            {
+                throw new EintragParseException("Xml could not be parsed correctly");
+            }
+            //Termine an 29.2. in nicht Schaltenjahren sollten nicht auf den 28. korrigiert werden, sondern als nicht valide gelten
+            //tag = HilfsKonstrukte.Korrigiere29zu28inNichtSchaltjahrFebruar(jahr, monat, tag);
+            try
+            {
+                HilfsKonstrukte.PruefeObValidesDatum(jahr, monat, tag); 
+            }
+            catch (FalscherBereichException )
+            {
+                throw new EintragParseException("Xml could not be parsed correctly");
+            }
             _datum = new DateTime(jahr, monat, tag);
-            Console.WriteLine("3");
         }
 
         public override string toString() 
@@ -136,12 +170,25 @@ namespace KalenderWelt
         public JaehrlichesEreignisAnFestemTag(string derTitel, XmlNode derKnoten) 
             : base(derTitel)
         {
-            _monat = HilfsKonstrukte.KonvertiereZuInt(
-                        derKnoten.SelectSingleNode("./monat").FirstChild.Value,
-                        "Monat");
-            _tag = HilfsKonstrukte.KonvertiereZuInt(
-                        derKnoten.SelectSingleNode("./tag").FirstChild.Value, 
-                        "Tag");
+            try
+            {
+                _monat = HilfsKonstrukte.KonvertiereZuInt(
+                            derKnoten.SelectSingleNode("./monat").FirstChild.Value,
+                            "Monat");
+                _tag = HilfsKonstrukte.KonvertiereZuInt(
+                            derKnoten.SelectSingleNode("./tag").FirstChild.Value, 
+                            "Tag");
+                int dummySchaltjahr = 2012;
+                HilfsKonstrukte.PruefeObValidesDatum(dummySchaltjahr, _monat, _tag); 
+            }
+            catch (KeineZahlException ) 
+            {
+                throw new EintragParseException("Xml could not be parsed correctly");
+            }
+            catch (FalscherBereichException )
+            {
+                throw new EintragParseException("Xml could not be parsed correctly");
+            }
         }
 
         public override string toString() 
@@ -149,11 +196,10 @@ namespace KalenderWelt
             return _tag + "." + _monat + ".: " + _titel;
         }
 
-        //TODO: was passiert mit inkorrekten Daten
-        //was passiert mit Ereignissen vom 29.2. in nicht-Schaltjahren?
         public override void TrageEinIn(KalenderJahr dasJahr) 
         {
-            dasJahr.GibMonate()[_monat-1].GibTage()[_tag-1].TrageEin(this);
+            int korrigierterTag = HilfsKonstrukte.Korrigiere29zu28inNichtSchaltjahrFebruar(dasJahr.Jahreszahl(), _monat, _tag);
+            dasJahr.GibMonate()[_monat-1].GibTage()[korrigierterTag-1].TrageEin(this);
         }
     }
 }

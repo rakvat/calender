@@ -106,10 +106,6 @@ namespace KalenderWelt
             gibZeileAus();
             string wochentage = String.Join(" ", HilfsKonstrukte.wochenTagNamenKurz);
 
-            if (_jahr.IstSchaltjahr())
-            {
-                HilfsKonstrukte.tageImMonat[1] = 29; //Februar Feld im Array bei Schaltjahren auf 29 setzen
-            }
             wochentagDesErstenImMonat = _jahr.StartWochenTag();
             for (monat = 0; monat < 12; monat++) //Schleife für die Erstellung der Monate: 0=Jan bis 11=Dez
             {
@@ -118,7 +114,7 @@ namespace KalenderWelt
 
                 if (monat > 0)
                 {
-                    wochentagDesErstenImMonat += HilfsKonstrukte.tageImMonat[monat - 1] % 7;
+                    wochentagDesErstenImMonat += HilfsKonstrukte.TageImMonat(monat, _jahr.Jahreszahl()) % 7;
                     wochentagDesErstenImMonat %= 7;
                 }
 
@@ -127,7 +123,7 @@ namespace KalenderWelt
                 int ausgabePosition = wochentagDesErstenImMonat;
 
                 string zeile = "".PadLeft(ausgabePosition * 3);
-                for (tag = 1; tag <= HilfsKonstrukte.tageImMonat[monat]; tag++) //solange Zähler kleiner gleich Wert aus Array Tage 
+                for (tag = 1; tag <= HilfsKonstrukte.TageImMonat(monat+1, _jahr.Jahreszahl()); tag++) //solange Zähler kleiner gleich Wert aus Array Tage 
                 {
                     zeile += tag.ToString().PadRight(3);
                     ausgabePosition++;
@@ -173,10 +169,6 @@ namespace KalenderWelt
             gibZeileAus();
             string wochentage = String.Join(" ", HilfsKonstrukte.wochenTagNamenKurz);
 
-            if (_jahr.IstSchaltjahr())
-            {
-                HilfsKonstrukte.tageImMonat[1] = 29; //Februar Feld im Array bei Schaltjahren auf 29 setzen
-            }
             wochentagDesErstenImMonat = _jahr.StartWochenTag();
             for (monat = 0; monat < 12; monat++) //Schleife für die Erstellung der Monate: 0=Jan bis 11=Dez
             {
@@ -186,7 +178,7 @@ namespace KalenderWelt
 
                 if (monat > 0)
                 {
-                    wochentagDesErstenImMonat += HilfsKonstrukte.tageImMonat[monat - 1] % 7;
+                    wochentagDesErstenImMonat += HilfsKonstrukte.TageImMonat(monat, _jahr.Jahreszahl()) % 7;
                     wochentagDesErstenImMonat %= 7;
                 }
 
@@ -195,7 +187,7 @@ namespace KalenderWelt
                 int ausgabePosition = wochentagDesErstenImMonat;
 
                 string zeile = "".PadLeft(ausgabePosition * 3);
-                for (tag = 1; tag <= HilfsKonstrukte.tageImMonat[monat]; tag++) //solange Zähler kleiner gleich Wert aus Array Tage 
+                for (tag = 1; tag <= HilfsKonstrukte.TageImMonat(monat+1, _jahr.Jahreszahl()); tag++) //solange Zähler kleiner gleich Wert aus Array Tage 
                 {
                     zeile += tag.ToString().PadRight(3);
                     ausgabePosition++;

@@ -20,15 +20,12 @@
         <monat>4</monat>
         <tag>32</tag>
     </JaehrlichesEreignisAnFestemTag>
+
     <EinmaligerTermin titel="Termin">
         <jahr>2012</jahr>
         <monat>2</monat>
         <tag>23</tag>
     </EinmaligerTermin>
-    <JaehrlichesEreignisAnFestemTag titel="Januar Geburtstag">
-        <monat>1</monat>
-        <tag>30</tag>
-    </JaehrlichesEreignisAnFestemTag>
     <EinmaligerTermin titel="Termin falscher Monat">
         <jahr>2012</jahr>
         <monat>20</monat>
@@ -39,5 +36,20 @@
         <monat>2</monat>
         <tag>ab</tag>
     </EinmaligerTermin>
+    <EinmaligerTermin titel="Schalttagtermin">
+        <jahr>2012</jahr>
+        <monat>2</monat>
+        <tag>29</tag>
+    </EinmaligerTermin>
+    <EinmaligerTermin titel="Schalttagtermin in nicht Schaltjahr">
+        <jahr>2013</jahr>
+        <monat>2</monat>
+        <tag>29</tag>
+    </EinmaligerTermin>
+
+    <JaehrlichesEreignisAnFestemTag titel="Januar Geburtstag">
+        <monat>1</monat>
+        <tag>30</tag>
+    </JaehrlichesEreignisAnFestemTag>
 </kalendereintraege>
 

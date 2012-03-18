@@ -4,7 +4,33 @@ using System.IO;
 namespace KalenderWelt
 {
 
-    public class HilfsKonstrukte {
+    public class KeineZahlException : System.ApplicationException
+    {
+        public KeineZahlException() {}
+        public KeineZahlException(string message) 
+        {
+            Console.WriteLine("KeineZahlException: " + message);
+        }
+        public KeineZahlException(string message, System.Exception inner) {}
+        protected KeineZahlException(System.Runtime.Serialization.SerializationInfo info,
+            System.Runtime.Serialization.StreamingContext context) {}
+    }
+
+    public class FalscherBereichException : System.ApplicationException
+    {
+        public FalscherBereichException() {}
+        public FalscherBereichException(string message) 
+        {
+            Console.WriteLine("FalscherBereichException: " + message);
+        }
+        public FalscherBereichException(string message, System.Exception inner) {}
+        protected FalscherBereichException(System.Runtime.Serialization.SerializationInfo info,
+            System.Runtime.Serialization.StreamingContext context) {}
+    }
+        
+    public class HilfsKonstrukte 
+    {
+        public const int MIN_JAHR = 1583; // 1582 fand die Kalenderkorrektur statt
         public const int TAGE_IM_JAHR = 365;
         public const int MONATE_IM_JAHR = 12;
         //nach der Revolution koennen wir hier einfach auf 10-Tages-Woche aendern ;-)
@@ -19,10 +45,18 @@ namespace KalenderWelt
         public static string[] wochenTagNamenKurz = 
             {"MO", "DI", "MI", "DO", "FR", "SA", "SO"};
         //Schaltjahr wird spaeter korrigiert
-        public static int[] tageImMonat = new int[12] 
+        private static int[] tageImMonat = new int[12] 
             { 31, 28, 31, 30,   
               31, 30, 31, 31, 
               30, 31, 30, 31 };
+        public static int TageImMonat(int derMonat, int dasJahr) 
+        {
+           if (derMonat == 2 && IstSchaltjahr(dasJahr))
+           {
+               return 29;
+           } 
+           return tageImMonat[derMonat-1];
+        }
 
         public static bool IstSchaltjahr(int dasJahr) 
         {
@@ -36,11 +70,36 @@ namespace KalenderWelt
             int meinInt;
             if (!int.TryParse(derString, out meinInt))
             {
-                Console.WriteLine(derDebugName + " ist keine Zahl");
+                Console.WriteLine("'" + derDebugName + "' ist keine Zahl");
+                throw new KeineZahlException(derDebugName + " ist keine Zahl");
             }
             return meinInt;
         }
 
+        public static void PruefeBereich(int dieZahl, int dasMinimum, int dasMaximum)
+        {
+            if (!(dieZahl >= dasMinimum && dieZahl <= dasMaximum)) 
+            {
+                throw new FalscherBereichException(dieZahl + " ist nicht im Bereich " + dasMinimum + " - " + dasMaximum);
+            }
+        }
+
+        public static int Korrigiere29zu28inNichtSchaltjahrFebruar(int dasJahr, int derMonat, int derTag)
+        {
+            if (derMonat == 2 && derTag == 29 && !IstSchaltjahr(dasJahr)) 
+            {
+                return 28;
+            }
+            return derTag;
+        }
+
+        //throws FalscherBereichException
+        public static void PruefeObValidesDatum(int dasJahr, int derMonat, int derTag) 
+        {
+            PruefeBereich(dasJahr, MIN_JAHR, int.MaxValue);
+            PruefeBereich(derMonat, 1, 12);
+            PruefeBereich(derTag, 1, TageImMonat(derMonat, dasJahr));
+        }
     } //ende class HilfsKonstrukte
 } //ende namespace KalenderWelt
 
