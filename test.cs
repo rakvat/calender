@@ -78,9 +78,33 @@ namespace KalenderWelt
     }
 
     [TestFixture]
+    public class EintragTest 
+    {
+        [Test]
+        public void EinmaligerTermin () 
+        {
+            KalenderJahr jahr = new KalenderJahr(2012);
+            List<Eintrag> meineEintraege = Eintrag.LeseEintraegeAusDatei("testfixtures/testeintraege.xml");
+            jahr.TrageEin(ref meineEintraege);
+
+            Assert.AreEqual(jahr.GibMonate()[1].GibTage()[22].EintraegeAlsString(), "Termin");
+            teste, ob nicht in anderem Jahr eingetragen
+            jahr = new KalenderJahr(2013);
+            meineEintraege = Eintrag.LeseEintraegeAusDatei("testfixtures/testeintraege.xml");
+            jahr.TrageEin(ref meineEintraege);
+
+            Assert.AreEqual(jahr.GibMonate()[1].GibTage()[22].EintraegeAlsString(), "");
+        }
+
+        [Test]
+        public void JaehrlichesEreignisAnFestemTermin () 
+        {
+        }
+    }
+
+    [TestFixture]
     public class AusgabeTest 
     {
-
         [Test]
         public void TageszeilenAusgabe () 
         {

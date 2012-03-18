@@ -8,10 +8,36 @@
         <monat>12</monat>
         <tag>30</tag>
     </JaehrlichesEreignisAnFestemTag>
+    <JaehrlichesEreignisAnFestemTag titel="Schaltjahr Geburtstag">
+        <monat>2</monat>
+        <tag>29</tag>
+    </JaehrlichesEreignisAnFestemTag>
+    <JaehrlichesEreignisAnFestemTag titel="Falscher Monat Geburtstag">
+        <monat>-4</monat>
+        <tag>29</tag>
+    </JaehrlichesEreignisAnFestemTag>
+    <JaehrlichesEreignisAnFestemTag titel="Falscher Tag Geburtstag">
+        <monat>4</monat>
+        <tag>32</tag>
+    </JaehrlichesEreignisAnFestemTag>
     <EinmaligerTermin titel="Termin">
         <jahr>2012</jahr>
         <monat>2</monat>
         <tag>23</tag>
+    </EinmaligerTermin>
+    <JaehrlichesEreignisAnFestemTag titel="Januar Geburtstag">
+        <monat>1</monat>
+        <tag>30</tag>
+    </JaehrlichesEreignisAnFestemTag>
+    <EinmaligerTermin titel="Termin falscher Monat">
+        <jahr>2012</jahr>
+        <monat>20</monat>
+        <tag>23</tag>
+    </EinmaligerTermin>
+    <EinmaligerTermin titel="Termin falscher Tag">
+        <jahr>2012</jahr>
+        <monat>2</monat>
+        <tag>ab</tag>
     </EinmaligerTermin>
 </kalendereintraege>
 

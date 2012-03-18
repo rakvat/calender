@@ -1,6 +1,7 @@
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Xml;
 using System.Xml.XPath;
 
@@ -42,7 +43,8 @@ namespace KalenderWelt
             {
                 string xmlNodeName = Eintrag.EINTRAG_TYPEN[i];
                 XmlNodeList eintragListe = wurzel.SelectNodes("./" + xmlNodeName);
-                Console.WriteLine("\nAnzahl der " + xmlNodeName + " in der xml Datei " + dieDatei + ": " + eintragListe.Count);
+                //noch eine Art der Debug Ausgabe, aber unklar wie in mono aktivierbar...
+                Debug.WriteLine("\nAnzahl der " + xmlNodeName + " in der xml Datei " + dieDatei + ": " + eintragListe.Count);
                 foreach (XmlNode eintrag in eintragListe)
                 {
                     string titel = eintrag.Attributes["titel"].Value;
@@ -68,7 +70,7 @@ namespace KalenderWelt
             DirectoryInfo d = new DirectoryInfo(dasVerzeichnis);
             foreach (FileInfo f in d.GetFiles("*.xml"))
             {
-                Console.WriteLine("Lese Eintraege aus " + f.Name + ";  " + f.Length + "; " + f.CreationTime);
+                Debug.WriteLine("Lese Eintraege aus " + f.Name + ";  " + f.Length + "; " + f.CreationTime);
                 List<Eintrag> neueEintraege = Eintrag.LeseEintraegeAusDatei(dasVerzeichnis + f.Name);
                 meineEintraege.AddRange(neueEintraege);
             } //ende foreach fileinfo
@@ -90,6 +92,7 @@ namespace KalenderWelt
             : base(derTitel)
         {
             int jahr, monat, tag;
+            Console.WriteLine("1");
             jahr = HilfsKonstrukte.KonvertiereZuInt(
                     derKnoten.SelectSingleNode("./jahr").FirstChild.Value, 
                     "Jahr");
@@ -99,7 +102,9 @@ namespace KalenderWelt
             tag = HilfsKonstrukte.KonvertiereZuInt(
                     derKnoten.SelectSingleNode("./tag").FirstChild.Value, 
                     "Tag");
+            Console.WriteLine("2");
             _datum = new DateTime(jahr, monat, tag);
+            Console.WriteLine("3");
         }
 
         public override string toString() 
