@@ -21,6 +21,7 @@ namespace KalenderWelt
 
     public abstract class Eintrag 
     {
+        public const string TEST_INPUT_DIR = "testinput/";
         public const string INPUT_DIR = "input/";
         public static string[] EINTRAG_TYPEN = {"JaehrlichesEreignisAnFestemTag", 
                                                "EinmaligerTermin"};

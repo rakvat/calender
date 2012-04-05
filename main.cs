@@ -117,13 +117,13 @@ namespace KalenderWelt
         static List<Eintrag> leseEintraege(bool debug)
         {
             List<Eintrag> meineEintraege = new List<Eintrag>();
-            if (!System.IO.Directory.Exists(Eintrag.INPUT_DIR))
+            if (!System.IO.Directory.Exists(Eintrag.TEST_INPUT_DIR))
             {
                 Console.WriteLine("xml Dateien nicht gefunden.");
                 return meineEintraege;
             }
 
-            meineEintraege = Eintrag.LeseEintraegeAusVerzeichnis(Eintrag.INPUT_DIR);
+            meineEintraege = Eintrag.LeseEintraegeAusVerzeichnis(Eintrag.TEST_INPUT_DIR);
 
             //fuer debug
             if (debug == true)
