@@ -96,13 +96,26 @@ namespace KalenderWelt
 
             Assert.IsTrue(jahr2012.GibMonate()[1].GibTage()[28].EintraegeAlsString().Contains("Schalttagtermin"), "Schalttagtermin wurde nicht korrekt eingetragen");
             //Eimalige Termine sollen nicht auf den 28ten übertragen werden sondern als nicht valide ignoriert werden
-            Assert.IsFalse(jahr2013.GibMonate()[1].GibTage()[27].EintraegeAlsString().Contains("Schalttagtermin in nicht Schaltjahr"), "Einmalige Termine wurde auf den 28ten übetragen, soll aber als nicht valide gelten");
+            Assert.IsFalse(jahr2013.GibMonate()[1].GibTage()[27].EintraegeAlsString().Contains("Schalttagtermin"), "Einmalige Termine wurde auf den 28ten übetragen, soll aber als nicht valide gelten");
         }
 
         [Test]
         public void JaehrlichesEreignisAnFestemTermin () 
         {
-            //TODO
+            List<Eintrag> meineEintraege = Eintrag.LeseEintraegeAusDatei("testfixtures/testeintraege.xml");
+
+            KalenderJahr jahr2012 = new KalenderJahr(2012);
+            jahr2012.TrageEin(ref meineEintraege);
+            Assert.AreEqual(jahr2012.GibMonate()[0].GibTage()[29].EintraegeAlsString(), "Januar Geburtstag");
+            
+            //teste, ob auch in anderem Jahr eingetragen
+            KalenderJahr jahr2013 = new KalenderJahr(2013);
+            jahr2013.TrageEin(ref meineEintraege);
+            Assert.AreEqual(jahr2013.GibMonate()[0].GibTage()[29].EintraegeAlsString(), "Januar Geburtstag");
+
+            Assert.IsTrue(jahr2012.GibMonate()[1].GibTage()[28].EintraegeAlsString().Contains("Schaltjahr Geburtstag"), "Schaltjahr Geburtstag wurde nicht korrekt eingetragen");
+            //jaehrliche Ereignisse werden auf den 28ten übertragen 
+            Assert.IsTrue(jahr2013.GibMonate()[1].GibTage()[27].EintraegeAlsString().Contains("Schaltjahr Geburtstag"), "jaehrlicher Termine am Schalttag wurde nicht korrekt auf den 28ten übetragen");
         }
     }
 

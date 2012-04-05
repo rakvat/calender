@@ -56,11 +56,5 @@
         <monat>2</monat>
         <tag>29</tag>
     </EinmaligerTermin>
-
-    <JaehrlichesEreignisAnFestemTag>
-        <titel>Januar Geburtstag</titel>
-        <monat>1</monat>
-        <tag>30</tag>
-    </JaehrlichesEreignisAnFestemTag>
 </kalendereintraege>
 
