@@ -105,7 +105,9 @@ namespace KalenderWelt
             ausgabe.gibAus();
 
 #if DEBUG
-            ausgabeTest(eingabejahr, eingabemodus, debug); //Aufruf der Testfunktion mit Übergabe der debug Variable
+            if (debug) {
+                ausgabeTest(eingabejahr, eingabemodus, debug); //Aufruf der Testfunktion mit Übergabe der debug Variable
+            }
 #endif
 
             //Erwartet Eingabe vor Beendigung des Programms
@@ -117,16 +119,16 @@ namespace KalenderWelt
         static List<Eintrag> leseEintraege(bool debug)
         {
             List<Eintrag> meineEintraege = new List<Eintrag>();
-            if (!System.IO.Directory.Exists(Eintrag.TEST_INPUT_DIR))
+            if (!System.IO.Directory.Exists(debug ? Eintrag.TEST_INPUT_DIR : Eintrag.INPUT_DIR))
             {
                 Console.WriteLine("xml Dateien nicht gefunden.");
                 return meineEintraege;
             }
 
-            meineEintraege = Eintrag.LeseEintraegeAusVerzeichnis(Eintrag.TEST_INPUT_DIR);
+            meineEintraege = Eintrag.LeseEintraegeAusVerzeichnis(debug ? Eintrag.TEST_INPUT_DIR : Eintrag.INPUT_DIR);
 
             //fuer debug
-            if (debug == true)
+            if (debug)
             {
                 foreach (Eintrag meinEintrag in meineEintraege)
                 {
