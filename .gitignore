@@ -8,3 +8,5 @@ testausgabe
 TestResult.xml
 _builds
 calender
+
+input/*.xml

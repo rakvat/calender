@@ -1,0 +1,15 @@
+<?xml version="1.0" ?> 
+<kalendereintraege>
+    <EinmaligerTermin>
+        <titel>XML-Projekt kick-off meeting</titel>
+        <jahr>2012</jahr>
+        <monat>2</monat>
+        <tag>23</tag>
+    </EinmaligerTermin>
+    <JaehrlichesEreignisAnFestemTag>
+        <titel>Helges Geburtstag</titel>
+        <monat>5</monat>
+        <tag>2</tag>
+    </JaehrlichesEreignisAnFestemTag>
+</kalendereintraege>
+

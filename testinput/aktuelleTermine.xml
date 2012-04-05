@@ -1,16 +1,19 @@
 <?xml version="1.0" ?> 
 <kalendereintraege>
-    <EinmaligerTermin titel="XML-Projekt kick-off meeting">
+    <EinmaligerTermin>
+        <titel>XML-Projekt kick-off meeting</titel>
         <jahr>2012</jahr>
         <monat>2</monat>
         <tag>23</tag>
     </EinmaligerTermin>
-    <EinmaligerTermin titel="Nachbesprechung XML-Projekt">
+    <EinmaligerTermin>
+        <titel>Nachbesprechung XML-Projekt</titel>
         <jahr>2013</jahr>
         <monat>2</monat>
         <tag>23</tag>
     </EinmaligerTermin>
-    <EinmaligerTermin titel="Eintrag Nr3 in XML-Projekt">
+    <EinmaligerTermin>
+        <titel>Eintrag Nr3 in XML-Projekt</titel>
         <jahr>2013</jahr>
         <monat>3</monat>
         <tag>30</tag>

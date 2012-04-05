@@ -32,6 +32,15 @@ namespace KalenderWelt
             _titel = derTitel;
         }
 
+        public Eintrag(XmlNode derKnoten) 
+        {
+            if (derKnoten != null && 
+                derKnoten.SelectSingleNode("./titel") != null &&
+                derKnoten.SelectSingleNode("./titel").FirstChild != null) {
+                _titel = derKnoten.SelectSingleNode("./titel").FirstChild.Value;
+            }
+        }
+
         public string GibTitel() 
         {
             return _titel;
@@ -60,18 +69,17 @@ namespace KalenderWelt
                 Debug.WriteLine("\nAnzahl der " + xmlNodeName + " in der xml Datei " + dieDatei + ": " + eintragListe.Count);
                 foreach (XmlNode eintrag in eintragListe)
                 {
-                    string titel = eintrag.Attributes["titel"].Value;
                     Eintrag neuerEintrag;
                     try 
                     {
                         switch (xmlNodeName)
                         {
                             case "JaehrlichesEreignisAnFestemTag":
-                                neuerEintrag = new JaehrlichesEreignisAnFestemTag(titel, eintrag);
+                                neuerEintrag = new JaehrlichesEreignisAnFestemTag(eintrag);
                                 meineEintraege.Add(neuerEintrag);
                                 break;
                             case "EinmaligerTermin":
-                                neuerEintrag = new EinmaligerTermin(titel, eintrag);
+                                neuerEintrag = new EinmaligerTermin(eintrag);
                                 meineEintraege.Add(neuerEintrag);
                                 break;
                         } //ende switch
@@ -109,8 +117,8 @@ namespace KalenderWelt
             _datum = dasDatum;
         }
         
-        public EinmaligerTermin(string derTitel, XmlNode derKnoten)
-            : base(derTitel)
+        public EinmaligerTermin(XmlNode derKnoten)
+            : base(derKnoten)
         {
             int jahr, monat, tag;
             try 
@@ -168,8 +176,8 @@ namespace KalenderWelt
             _tag = derTag;
         }
 
-        public JaehrlichesEreignisAnFestemTag(string derTitel, XmlNode derKnoten) 
-            : base(derTitel)
+        public JaehrlichesEreignisAnFestemTag(XmlNode derKnoten) 
+            : base(derKnoten)
         {
             try
             {

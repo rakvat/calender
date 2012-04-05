@@ -1,53 +1,64 @@
 <?xml version="1.0" ?> 
 <kalendereintraege>
-    <JaehrlichesEreignisAnFestemTag titel="Januar Geburtstag">
+    <JaehrlichesEreignisAnFestemTag>
+        <titel><![CDATA[Januar Geburtstag]]></titel>
         <monat>1</monat>
         <tag>30</tag>
     </JaehrlichesEreignisAnFestemTag>
-    <JaehrlichesEreignisAnFestemTag titel="Dezember Geburtstag">
+    <JaehrlichesEreignisAnFestemTag >
+        <titel>Dezember Geburtstag</titel>
         <monat>12</monat>
         <tag>30</tag>
     </JaehrlichesEreignisAnFestemTag>
-    <JaehrlichesEreignisAnFestemTag titel="Schaltjahr Geburtstag">
+    <JaehrlichesEreignisAnFestemTag>
+        <titel>Schaltjahr Geburtstag</titel>
         <monat>2</monat>
         <tag>29</tag>
     </JaehrlichesEreignisAnFestemTag>
-    <JaehrlichesEreignisAnFestemTag titel="Falscher Monat Geburtstag">
+    <JaehrlichesEreignisAnFestemTag>
+        <titel>Falscher Monat Geburtstag</titel>
         <monat>-4</monat>
         <tag>29</tag>
     </JaehrlichesEreignisAnFestemTag>
-    <JaehrlichesEreignisAnFestemTag titel="Falscher Tag Geburtstag">
+    <JaehrlichesEreignisAnFestemTag>
+        <titel>Falscher Tag Geburtstag</titel>
         <monat>4</monat>
         <tag>32</tag>
     </JaehrlichesEreignisAnFestemTag>
 
-    <EinmaligerTermin titel="Termin">
+    <EinmaligerTermin>
+        <titel>Termin</titel>
         <jahr>2012</jahr>
         <monat>2</monat>
         <tag>23</tag>
     </EinmaligerTermin>
-    <EinmaligerTermin titel="Termin falscher Monat">
+    <EinmaligerTermin>
+        <titel>Termin falscher Monat</titel>
         <jahr>2012</jahr>
         <monat>20</monat>
         <tag>23</tag>
     </EinmaligerTermin>
-    <EinmaligerTermin titel="Termin falscher Tag">
+    <EinmaligerTermin>
+        <titel>Termin falscher Tag</titel>
         <jahr>2012</jahr>
         <monat>2</monat>
         <tag>ab</tag>
     </EinmaligerTermin>
-    <EinmaligerTermin titel="Schalttagtermin">
+    <EinmaligerTermin>
+        <titel>Schalttagtermin</titel>
         <jahr>2012</jahr>
         <monat>2</monat>
         <tag>29</tag>
     </EinmaligerTermin>
-    <EinmaligerTermin titel="Schalttagtermin in nicht Schaltjahr">
+    <EinmaligerTermin>
+        <titel>Schalttagtermin in nicht Schaltjahr</titel>
         <jahr>2013</jahr>
         <monat>2</monat>
         <tag>29</tag>
     </EinmaligerTermin>
 
-    <JaehrlichesEreignisAnFestemTag titel="Januar Geburtstag">
+    <JaehrlichesEreignisAnFestemTag>
+        <titel>Januar Geburtstag</titel>
         <monat>1</monat>
         <tag>30</tag>
     </JaehrlichesEreignisAnFestemTag>

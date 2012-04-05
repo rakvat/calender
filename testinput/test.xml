@@ -1,10 +1,12 @@
 <?xml version="1.0" ?> 
 <kalendereintraege>
-    <JaehrlichesEreignisAnFestemTag titel="TESTChristophs Geburtstag">
+    <JaehrlichesEreignisAnFestemTag>
+        <titel>TESTChristophs Geburtstag</titel>
         <monat>6</monat>
         <tag>30</tag>
     </JaehrlichesEreignisAnFestemTag>
-    <JaehrlichesEreignisAnFestemTag titel="TESTKatjas Geburtstag">
+    <JaehrlichesEreignisAnFestemTag>
+        <titel>TESTKatjas Geburtstag</titel>
         <monat>4</monat>
         <tag>8</tag>
     </JaehrlichesEreignisAnFestemTag>
