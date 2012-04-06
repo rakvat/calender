@@ -103,7 +103,6 @@ namespace KalenderWelt
         public void JaehrlichesEreignisAnFestemTermin () 
         {
             List<Eintrag> meineEintraege = Eintrag.LeseEintraegeAusDatei("testfixtures/testeintraege.xml");
-
             KalenderJahr jahr2012 = new KalenderJahr(2012);
             jahr2012.TrageEin(ref meineEintraege);
             Assert.AreEqual(jahr2012.GibMonate()[0].GibTage()[29].EintraegeAlsString(), "Januar Geburtstag");
@@ -116,6 +115,18 @@ namespace KalenderWelt
             Assert.IsTrue(jahr2012.GibMonate()[1].GibTage()[28].EintraegeAlsString().Contains("Schaltjahr Geburtstag"), "Schaltjahr Geburtstag wurde nicht korrekt eingetragen");
             //jaehrliche Ereignisse werden auf den 28ten übertragen 
             Assert.IsTrue(jahr2013.GibMonate()[1].GibTage()[27].EintraegeAlsString().Contains("Schaltjahr Geburtstag"), "jaehrlicher Termine am Schalttag wurde nicht korrekt auf den 28ten übetragen");
+        }
+
+        [Test]
+        public void Geburtstag ()
+        {
+            List<Eintrag> meineEintraege = Eintrag.LeseEintraegeAusDatei("testfixtures/testeintraege.xml");
+            KalenderJahr jahr2012 = new KalenderJahr(2012);
+            jahr2012.TrageEin(ref meineEintraege);
+            //Angabe des Jahrs ist nicht nötig
+            Assert.AreEqual(jahr2012.GibMonate()[11].GibTage()[30].EintraegeAlsString(), "Aisha");
+            //korrekte Anzeige des Alters
+            Assert.AreEqual(jahr2012.GibMonate()[3].GibTage()[29].EintraegeAlsString(), "Barbara (" + (2012 - 1918) + ")");
         }
     }
 

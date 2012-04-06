@@ -123,6 +123,7 @@ namespace KalenderWelt
         private int _wochentag;
         private int _tagImJahr;
         private List<Eintrag> _eintraege;
+        private List<string> _eintraegeStrings;
 
         public Tag(int derIndex, int derWochentag, int derTagImJahr)
         {
@@ -130,6 +131,7 @@ namespace KalenderWelt
             _wochentag = derWochentag;
             _tagImJahr = derTagImJahr;
             _eintraege = new List<Eintrag>();
+            _eintraegeStrings = new List<string>();
         }
 
         public int GibWochentag()
@@ -142,17 +144,18 @@ namespace KalenderWelt
             return _index;
         }
 
-        public void TrageEin(Eintrag derEintrag)
+        public void TrageEin(Eintrag derEintrag, string derString)
         {
             _eintraege.Add(derEintrag);
+            _eintraegeStrings.Add(derString);
         }
 
         public string EintraegeAlsString()
         {
             string meineEintraege = "";
-            for (int i = 0, l = _eintraege.Count; i < l; ++i)
+            for (int i = 0, l = _eintraegeStrings.Count; i < l; ++i)
             {
-                meineEintraege += _eintraege[i].GibTitel();
+                meineEintraege += _eintraegeStrings[i];
                 if (i != _eintraege.Count - 1) 
                 {
                     meineEintraege += ", ";

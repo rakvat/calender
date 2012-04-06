@@ -24,7 +24,8 @@ namespace KalenderWelt
         public const string TEST_INPUT_DIR = "testinput/";
         public const string INPUT_DIR = "input/";
         public static string[] EINTRAG_TYPEN = {"JaehrlichesEreignisAnFestemTag", 
-                                               "EinmaligerTermin"};
+                                                "Geburtstag",
+                                                "EinmaligerTermin"};
         protected string _titel;
 
         public Eintrag(string derTitel) 
@@ -44,6 +45,11 @@ namespace KalenderWelt
         public string GibTitel() 
         {
             return _titel;
+        }
+
+        public virtual string GibEintragText(KalenderJahr dasJahr) 
+        {
+            return GibTitel();
         }
 
         public abstract string toString();
@@ -76,6 +82,10 @@ namespace KalenderWelt
                         {
                             case "JaehrlichesEreignisAnFestemTag":
                                 neuerEintrag = new JaehrlichesEreignisAnFestemTag(eintrag);
+                                meineEintraege.Add(neuerEintrag);
+                                break;
+                            case "Geburtstag":
+                                neuerEintrag = new Geburtstag(eintrag);
                                 meineEintraege.Add(neuerEintrag);
                                 break;
                             case "EinmaligerTermin":
@@ -160,14 +170,14 @@ namespace KalenderWelt
             if (dasJahr.Jahreszahl() != _datum.Year) {
                 return;
             }
-            dasJahr.GibMonate()[_datum.Month-1].GibTage()[_datum.Day-1].TrageEin(this);
+            dasJahr.GibMonate()[_datum.Month-1].GibTage()[_datum.Day-1].TrageEin(this, GibEintragText(dasJahr));
         }
     }
 
     public class JaehrlichesEreignisAnFestemTag : Eintrag 
     {
-        private int _monat;
-        private int _tag;
+        protected int _monat;
+        protected int _tag;
 
         public JaehrlichesEreignisAnFestemTag(string derTitel, int derMonat, int derTag) 
             : base(derTitel) 
@@ -208,7 +218,49 @@ namespace KalenderWelt
         public override void TrageEinIn(KalenderJahr dasJahr) 
         {
             int korrigierterTag = HilfsKonstrukte.Korrigiere29zu28inNichtSchaltjahrFebruar(dasJahr.Jahreszahl(), _monat, _tag);
-            dasJahr.GibMonate()[_monat-1].GibTage()[korrigierterTag-1].TrageEin(this);
+            dasJahr.GibMonate()[_monat-1].GibTage()[korrigierterTag-1].TrageEin(this, GibEintragText(dasJahr));
+        }
+    }
+
+    public class Geburtstag : JaehrlichesEreignisAnFestemTag
+    {
+        private int _geburtsjahr = 0;
+
+        public Geburtstag(string derTitel, int derMonat, int derTag, int dasGeburtsjahr) 
+            : base(derTitel, derMonat, derTag) 
+        {
+            _geburtsjahr = dasGeburtsjahr;
+        }
+
+        public Geburtstag(XmlNode derKnoten) 
+            : base(derKnoten)
+        {
+            try
+            {
+                if (derKnoten.SelectSingleNode("./jahr") != null) {
+                    _geburtsjahr = HilfsKonstrukte.KonvertiereZuInt(
+                                derKnoten.SelectSingleNode("./jahr").FirstChild.Value,
+                                "Jahr");
+                }
+            }
+            catch (KeineZahlException ) 
+            {
+                throw new EintragParseException("Xml could not be parsed correctly");
+            }
+        }
+
+        public override string toString() 
+        {
+            return _tag + "." + _monat + ".: " + _titel + "(" + _geburtsjahr + ")";
+        }
+
+        public override string GibEintragText(KalenderJahr dasJahr) 
+        {
+            if (_geburtsjahr != 0) 
+            {
+                return GibTitel() + " (" + (dasJahr.Jahreszahl() - _geburtsjahr) + ")";
+            }
+            return GibTitel();
         }
     }
 }

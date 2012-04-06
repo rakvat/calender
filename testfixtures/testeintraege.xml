@@ -1,5 +1,17 @@
 <?xml version="1.0" ?> 
 <kalendereintraege>
+    <Geburtstag>
+        <titel>Barbara</titel>
+        <monat>4</monat>
+        <tag>30</tag>
+        <jahr>1918</jahr>
+    </Geburtstag>
+    <Geburtstag>
+        <titel>Aisha</titel>
+        <monat>12</monat>
+        <tag>31</tag>
+    </Geburtstag>
+
     <JaehrlichesEreignisAnFestemTag>
         <titel><![CDATA[Januar Geburtstag]]></titel>
         <monat>1</monat>
