@@ -25,6 +25,8 @@ namespace KalenderWelt
         public const string INPUT_DIR = "input/";
         public static string[] EINTRAG_TYPEN = {"JaehrlichesEreignisAnFestemTag", 
                                                 "Geburtstag",
+                                                "RelativesEreignisNterWochentagImMonat",
+                                                "RelativesEreignisLetzteWocheImMonat",
                                                 "EinmaligerTermin"};
         protected string _titel;
 
@@ -90,6 +92,14 @@ namespace KalenderWelt
                                 break;
                             case "EinmaligerTermin":
                                 neuerEintrag = new EinmaligerTermin(eintrag);
+                                meineEintraege.Add(neuerEintrag);
+                                break;
+                            case "RelativesEreignisNterWochentagImMonat":
+                                neuerEintrag = new RelativesEreignisNterWochentagImMonat(eintrag);
+                                meineEintraege.Add(neuerEintrag);
+                                break;
+                            case "RelativesEreignisLetzteWocheImMonat":
+                                neuerEintrag = new RelativesEreignisLetzteWocheImMonat(eintrag);
                                 meineEintraege.Add(neuerEintrag);
                                 break;
                         } //ende switch
@@ -258,9 +268,132 @@ namespace KalenderWelt
         {
             if (_geburtsjahr != 0) 
             {
-                return GibTitel() + " (" + (dasJahr.Jahreszahl() - _geburtsjahr) + ")";
+                return "Geburtstag " + GibTitel() + " (" + (dasJahr.Jahreszahl() - _geburtsjahr) + ")";
             }
             return GibTitel();
+        }
+    }
+
+    public abstract class RelativerEintrag : Eintrag
+    {
+        protected int _monat;
+        protected int _wochentag;
+
+        public RelativerEintrag(string derTitel, int derMonat, int derWochentag)
+            :base(derTitel)
+        {
+            _monat = derMonat;
+            _wochentag = derWochentag;
+        }
+
+        public RelativerEintrag(XmlNode derKnoten)
+            :base(derKnoten)
+        {
+            try
+            {
+                _monat = HilfsKonstrukte.KonvertiereZuInt(
+                         derKnoten.SelectSingleNode("./monat").FirstChild.Value,
+                         "Monat");
+                _wochentag = HilfsKonstrukte.KonvertiereZuInt(
+                        derKnoten.SelectSingleNode("./wochentag").FirstChild.Value, 
+                        "Wochentag");
+                HilfsKonstrukte.PruefeBereich(_monat, 1, 12);
+                HilfsKonstrukte.PruefeBereich(_wochentag, 0, HilfsKonstrukte.TAGE_PRO_WOCHE-1);
+            }
+            catch (KeineZahlException ) 
+            {
+                throw new EintragParseException("Xml could not be parsed correctly");
+            }
+            catch (FalscherBereichException )
+            {
+                throw new EintragParseException("Xml could not be parsed correctly");
+            }
+        }
+    }
+
+    public class RelativesEreignisNterWochentagImMonat : RelativerEintrag
+    {
+        private int _n;
+
+        public RelativesEreignisNterWochentagImMonat(string derTitel, int derMonat, int derWochentag, int n) 
+            :base(derTitel, derMonat, derWochentag)
+        {
+            _n = n;
+        }
+
+        public RelativesEreignisNterWochentagImMonat(XmlNode derKnoten)
+            :base(derKnoten)
+        {
+            try
+            {
+                _n = HilfsKonstrukte.KonvertiereZuInt(
+                        derKnoten.SelectSingleNode("./n").FirstChild.Value, 
+                        "n");
+                HilfsKonstrukte.PruefeBereich(_n, 1, 5);
+            }
+            catch (KeineZahlException ) 
+            {
+                throw new EintragParseException("Xml could not be parsed correctly");
+            }
+            catch (FalscherBereichException )
+            {
+                throw new EintragParseException("Xml could not be parsed correctly");
+            }
+
+        }
+
+        public override string toString() 
+        {
+            return _n + "ter" + HilfsKonstrukte.wochenTagNamen[_wochentag] + " im Monat " + 
+                   HilfsKonstrukte.monatsNamen[_monat-1] + ": " + _titel;
+        }
+
+        public override void TrageEinIn(KalenderJahr dasJahr) 
+        {
+            List<Tag> tageImMonat = dasJahr.GibMonate()[_monat-1].GibTage();
+            int index = 0;
+            Tag ersterTag = tageImMonat[index];
+            while (ersterTag.GibWochentag() != _wochentag) {
+                index++;
+                ersterTag = tageImMonat[index];
+            }
+            index = index + (_n-1) * HilfsKonstrukte.TAGE_PRO_WOCHE;
+            if (index >= tageImMonat.Count) {
+                return;
+            }
+            Tag nterTag = tageImMonat[index];
+            nterTag.TrageEin(this, GibEintragText(dasJahr));
+        }
+    }
+
+    public class RelativesEreignisLetzteWocheImMonat : RelativerEintrag
+    {
+        public RelativesEreignisLetzteWocheImMonat(string derTitel, int derMonat, int derWochentag) 
+            :base(derTitel, derMonat, derWochentag)
+        {
+        }
+
+        public RelativesEreignisLetzteWocheImMonat(XmlNode derKnoten)
+            :base(derKnoten)
+        {
+
+        }
+        public override string toString() 
+        {
+            return "letzter" + HilfsKonstrukte.wochenTagNamen[_wochentag] + " im Monat " + 
+                   HilfsKonstrukte.monatsNamen[_monat-1] + ": " + _titel;
+        }
+
+        public override void TrageEinIn(KalenderJahr dasJahr) 
+        {
+            List<Tag> tageImMonat = dasJahr.GibMonate()[_monat-1].GibTage();
+            int index = tageImMonat.Count-1;
+            Tag letzterTag = tageImMonat[index];
+            while (letzterTag.GibWochentag() != _wochentag) {
+                index--;
+                letzterTag = tageImMonat[index];
+            }
+            letzterTag.TrageEin(this, GibEintragText(dasJahr));
         }
     }
 }

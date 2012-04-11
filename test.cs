@@ -124,9 +124,9 @@ namespace KalenderWelt
             KalenderJahr jahr2012 = new KalenderJahr(2012);
             jahr2012.TrageEin(ref meineEintraege);
             //Angabe des Jahrs ist nicht nötig
-            Assert.AreEqual(jahr2012.GibMonate()[11].GibTage()[30].EintraegeAlsString(), "Aisha");
+            Assert.AreEqual(jahr2012.GibMonate()[11].GibTage()[30].EintraegeAlsString(), "Geburtstag Aisha");
             //korrekte Anzeige des Alters
-            Assert.AreEqual(jahr2012.GibMonate()[3].GibTage()[29].EintraegeAlsString(), "Barbara (" + (2012 - 1918) + ")");
+            Assert.AreEqual(jahr2012.GibMonate()[3].GibTage()[29].EintraegeAlsString(), "Geburtstag Barbara (" + (2012 - 1918) + ")");
         }
     }
 

@@ -7,9 +7,26 @@
         <tag>23</tag>
     </EinmaligerTermin>
     <JaehrlichesEreignisAnFestemTag>
-        <titel>Helges Geburtstag</titel>
-        <monat>5</monat>
-        <tag>2</tag>
+        <titel>Neujahr</titel>
+        <monat>1</monat>
+        <tag>1</tag>
     </JaehrlichesEreignisAnFestemTag>
+	<Geburtstag>
+		<tag>23</tag>
+		<monat>3</monat>
+		<jahr>1975</jahr>
+		<titel>Yori Muster</titel>
+	</Geburtstag>
+	<RelativesEreignisNterWochentagImMonat>
+		<n>1</n>
+		<wochentag>6</wochentag>
+		<monat>5</monat>
+		<titel>Weltlachtag</titel>
+	</RelativesEreignisNterWochentagImMonat>
+	<RelativesEreignisLetzteWocheImMonat>
+		<wochentag>6</wochentag>
+		<monat>3</monat>
+		<titel>Zeitumstellung (eine Stunde vor)</titel>
+	</RelativesEreignisLetzteWocheImMonat>
 </kalendereintraege>
 
