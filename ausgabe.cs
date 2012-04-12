@@ -48,18 +48,20 @@ namespace KalenderWelt
             }
         }
 
-        protected void oeffneStream(int eingabemodus)
+        protected void oeffneStream()
+        {
+            oeffneStream(".txt");
+        }
+
+        protected void oeffneStream(string dieFileEndung)
         {
             string jahr = Convert.ToString(_jahr.Jahreszahl());
-            string Dateiname;
-            Dateiname = jahr.Insert(4, ".txt");
-            jahr = Dateiname;
-            Dateiname = jahr.Insert(0, "Kalender");
+            string Dateiname = jahr.Insert(4, dieFileEndung);
+            Dateiname = Dateiname.Insert(0, "Kalender");
 
-            if (_modus == 1) Dateiname = Dateiname.Insert(0, "1"); //Monatsblock einspaltig
-            if (_modus == 2) Dateiname = Dateiname.Insert(0, "2"); //Monatsblock zweispaltig
-            if (_modus == 3) Dateiname = Dateiname.Insert(0, "3"); //Tageszeilen ohne Einträge
-            if (_modus == 4) Dateiname = Dateiname.Insert(0, "4"); //Tageszeilen mit Einträge
+            //XXX: nicht schön, dass _modus nur für diese Zwecke 
+            //durchgeschleift werden muss
+            Dateiname = Dateiname.Insert(0, Convert.ToString(_modus)); 
 
             FileInfo f;
             if (_testModus) 
@@ -99,7 +101,7 @@ namespace KalenderWelt
 
         public override void gibAus()
         {
-            oeffneStream(_modus);
+            oeffneStream();
             int monat, tag;
             int wochentagDesErstenImMonat = 0; //Mo = 0, ...
             gibZeileAus("Kalender fuer das Jahr " + _jahr.Jahreszahl());
@@ -160,7 +162,7 @@ namespace KalenderWelt
 
         public override void gibAus()
         {
-            oeffneStream(_modus);
+            oeffneStream();
 
             int monat, tag;
             int wochentagDesErstenImMonat = 0; //Mo = 0, ...
@@ -235,7 +237,7 @@ namespace KalenderWelt
 
         public override void gibAus()
         {
-            oeffneStream(_modus);
+            oeffneStream();
             gibZeileAus("Kalender fuer das Jahr " + _jahr.Jahreszahl());
             gibZeileAus();
 

@@ -3,8 +3,8 @@ all: prepare libkalender kalender libtest
 prepare:
 	mkdir -p _builds
 
-libkalender: kalenderjahr.cs ausgabe.cs hilfskonstrukte.cs
-	gmcs -target:library kalenderjahr.cs ausgabe.cs eintrag.cs hilfskonstrukte.cs -out:_builds/libkalender.dll
+libkalender: kalenderjahr.cs ausgabe.cs latexausgabe.cs hilfskonstrukte.cs
+	gmcs -target:library kalenderjahr.cs ausgabe.cs latexausgabe.cs eintrag.cs hilfskonstrukte.cs -out:_builds/libkalender.dll
 
 kalender: main.cs 
 	gmcs main.cs -r:_builds/libkalender.dll -out:_builds/kalender.exe

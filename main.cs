@@ -59,7 +59,7 @@ namespace KalenderWelt
                 }
             } while (!eingabeOk);
 
-            Console.Write("Soll die Ausgabe \n1) Monatsblock einspaltig oder\n2) Monatsblock zweispaltig oder\n3) Zeilenweise oder\n4) Zeilenweise mit Eintraegen sein?  ");
+            Console.Write("Soll die Ausgabe \n1) Monatsblock einspaltig oder\n2) Monatsblock zweispaltig oder\n3) Zeilenweise oder\n4) Zeilenweise mit Eintraegen\n oder 5) gelatexed sein?  ");
             eingabeOk = false;
             do
             {
@@ -68,7 +68,7 @@ namespace KalenderWelt
                 {
                     Console.WriteLine("Falsche Eingabe, da Buchstaben nicht möglich sind.");
                 }
-                else if ((eingabemodus < 1) || (eingabemodus > 4))
+                else if ((eingabemodus < 1) || (eingabemodus > 5))
                 {
                     Console.WriteLine("Falsche Eingabe. Modus ist nicht im gueltigen Bereich.");
                 }
@@ -100,6 +100,8 @@ namespace KalenderWelt
                 case 3: ausgabe = new TageszeilenAusgabe(ref kalenderJahr, eingabemodus, false);
                     break;
                 case 4: ausgabe = new TageszeilenAusgabe(ref kalenderJahr, eingabemodus, true);
+                    break;
+                case 5: ausgabe = new LatexTageszeilenAusgabe(ref kalenderJahr);
                     break;
             }
             ausgabe.gibAus();
