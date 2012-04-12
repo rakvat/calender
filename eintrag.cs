@@ -266,11 +266,12 @@ namespace KalenderWelt
 
         public override string GibEintragText(KalenderJahr dasJahr) 
         {
+            string start = "Geburtstag ";
             if (_geburtsjahr != 0) 
             {
-                return "Geburtstag " + GibTitel() + " (" + (dasJahr.Jahreszahl() - _geburtsjahr) + ")";
+                return start + GibTitel() + " (" + (dasJahr.Jahreszahl() - _geburtsjahr) + ")";
             }
-            return GibTitel();
+            return start + GibTitel();
         }
     }
 
