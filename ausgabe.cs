@@ -48,6 +48,14 @@ namespace KalenderWelt
             }
         }
 
+        protected void gibZeilenAus(string[] dieZeilen)
+        {
+            for (int i = 0; i < dieZeilen.Length; ++i)
+            {
+                gibZeileAus(dieZeilen[i]);
+            }
+        }
+
         protected void oeffneStream()
         {
             oeffneStream(".txt");
