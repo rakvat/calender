@@ -16,26 +16,26 @@ namespace KalenderWelt
             "\\begin{document}",
             ""
             };
-            private const string ENDE = "\\end{document}";
-            private const string JAHR = "\\textbf{{\\huge{{Kalender f\"ur das Jahr {0}}}}}\\\\\\\\";
+        private const string ENDE = "\\end{document}";
+        private const string JAHR = "\\textbf{{\\huge{{Kalender f\"ur das Jahr {0}}}}}\\\\\\\\";
 
-            private const string MONATS_TITEL = "\\textbf{{\\large{{{0}}}}\\\\
-            
-            private readonly string[] MONAT_START = {
-                "\\begin{tabular*}{20cm}{|l|l|p{5cm}|l| }",
-                "\\hline",
-                "\\textbf{} & \\textbf{} & \\textbf{} & \\textbf{...}\\\\",
-                "\\hline",
-                "\\hline"
-                };
+        private const string MONATS_TITEL = "\\textbf{{\\large{{{0}}}}}\\\\\\\\";
+        
+        private readonly string[] MONAT_START = {
+            "\\begin{tabular*}{20cm}{|l|l|p{5cm}|l| }",
+            "\\hline",
+            "\\textbf{} & \\textbf{} & \\textbf{} & \\textbf{...}\\\\",
+            "\\hline",
+            "\\hline"
+            };
 
-            private readonly string[] MONAT_ENDE = {
-                "\\end{tabular*}",
-                "\\newpage"
-                };
+        private readonly string[] MONAT_ENDE = {
+            "\\end{tabular*}",
+            "\\newpage"
+            };
 
-            private const string ZEILE = "{0} & \\textbf{{{1}}} & \\tiny{{{3}}} & }}\\\\ \\hline";
-            private const string WOCHENENDE = "\\hline";
+        private const string ZEILE = "{0} & \\textbf{{{1}}} & \\tiny{{{2}}} & \\\\ \\hline";
+        private const string WOCHENENDE = "\\hline";
 
         public LatexTageszeilenAusgabe(ref KalenderJahr dasJahr)
             :base(ref dasJahr, 5) //XXX: modus sollte nicht nötig sein
@@ -54,15 +54,17 @@ namespace KalenderWelt
                 gibZeileAus(String.Format(MONATS_TITEL, ersetzeFuerLatex(
                         HilfsKonstrukte.monatsNamen[monat.GibIndex()])));
                 gibZeilenAus(MONAT_START);
+        
                 foreach (Tag tag in monat.GibTage())
                 {
                     int wochentag = tag.GibWochentag();
-                    string tagstring = HilfsKonstrukte.wochenTagNamenKurz[wochentag] + 
-                                        " " + tag.GibIndex().ToString().PadLeft(3);
-                    if (_mitEintraegen) {
-                        tagstring += "  " + tag.EintraegeAlsString();
-                    }
-                    gibZeileAus(tagstring);
+                    string wochentagString = 
+                        HilfsKonstrukte.wochenTagNamenKurz[wochentag];
+                    string tagString = tag.GibIndex().ToString();
+                    string eintraegeString = 
+                        ersetzeFuerLatex(tag.EintraegeAlsString());
+                    
+                    gibZeileAus(String.Format(ZEILE, wochentagString, tagString, eintraegeString));
                     if (wochentag == 6)
                     {
                         gibZeileAus(WOCHENENDE);
@@ -73,6 +75,18 @@ namespace KalenderWelt
 
             gibZeileAus(ENDE);
             schliesseStream();
+        }
+
+        private string ersetzeFuerLatex(string derString)
+        {
+            return derString.Replace("ä","\\\"a").
+                             Replace("ö","\\\"o").
+                             Replace("ü","\\\"u").
+                             Replace("Ä","\\\"A").
+                             Replace("Ö","\\\"O").
+                             Replace("Ü","\\\"U").
+                             Replace("ß","\\\"s").
+                             Replace("_","\\_");
         }
     }
 }

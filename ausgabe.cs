@@ -38,11 +38,13 @@ namespace KalenderWelt
         protected void gibZeileAus() //erzeugt Leere Zeilen, ohne übergabewert
         {
             gibZeileAus("");
+            //_streamWriter.Write("<br>"); //erzeugt Zeileumbrauch für die HTML Ausgabe
         }
 
         protected void gibZeileAus(string dieZeile) //gibt zusammengebaute Kalenderzeilen aus, mit übergabewert
         {
             _streamWriter.WriteLine(dieZeile);
+            //_streamWriter.Write("<br>");
             if (!_testModus) {
                 Console.WriteLine(dieZeile);
             }
@@ -54,6 +56,37 @@ namespace KalenderWelt
             {
                 gibZeileAus(dieZeilen[i]);
             }
+        }
+
+        protected void html(int eingabemodus)
+        {
+            string jahr = Convert.ToString(_jahr.Jahreszahl());
+            string Dateiname;
+            Dateiname = jahr.Insert(4, ".html");
+            jahr = Dateiname;
+            Dateiname = jahr.Insert(0, "Kalender");
+
+            if (_modus == 1) Dateiname = Dateiname.Insert(0, "1"); //Monatsblock einspaltig
+            if (_modus == 2) Dateiname = Dateiname.Insert(0, "2"); //Monatsblock zweispaltig
+            if (_modus == 3) Dateiname = Dateiname.Insert(0, "3"); //Tageszeilen ohne Einträge
+            if (_modus == 4) Dateiname = Dateiname.Insert(0, "4"); //Tageszeilen mit Einträge
+
+            FileInfo f;
+            if (_testModus)
+            {
+                f = erzeugeFileInfo(Ausgabe.TEST_AUSGABE_DIR, Dateiname);
+            }
+            else
+            {
+                f = erzeugeFileInfo(Ausgabe.AUSGABE_DIR, Dateiname);
+            }
+            _streamWriter = f.CreateText();
+            _streamWriter.WriteLine("<html>"); //Anfang der HTML Datei erstellen
+            _streamWriter.WriteLine("<head>");
+            _streamWriter.WriteLine("<title>Kalender fuer das Jahr " + Convert.ToString(_jahr.Jahreszahl()) + " im HTML Format mit C#</title>");
+            _streamWriter.WriteLine("</head>");
+            _streamWriter.WriteLine("<body>");
+       //   _streamWriter.WriteLine("Inhalt");
         }
 
         protected void oeffneStream()
@@ -83,6 +116,9 @@ namespace KalenderWelt
 
         protected void schliesseStream()
         {
+            _streamWriter.WriteLine("</body>"); //HTML Dokument abschliesen
+            _streamWriter.WriteLine("</html>");
+
             _streamWriter.Close(); //Datei schliesen
         }
 
@@ -109,7 +145,8 @@ namespace KalenderWelt
 
         public override void gibAus()
         {
-            oeffneStream();
+            oeffneStream();     //Textdatei erzeigen
+            html(_modus);       //HTML Datei anlegen
             int monat, tag;
             int wochentagDesErstenImMonat = 0; //Mo = 0, ...
             gibZeileAus("Kalender fuer das Jahr " + _jahr.Jahreszahl());
