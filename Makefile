@@ -13,10 +13,10 @@ libtest: test.cs
 	gmcs test.cs -target:library -pkg:nunit -r:_builds/libkalender.dll -out:_builds/test.dll
 
 start:
-	./_builds/kalender.exe
+	mono _builds/kalender.exe
 
 debug:
-	./_builds/kalender.exe debug
+	mono _builds/kalender.exe debug
 
 runtest:
 	rm -rf _builds/testfixtures
