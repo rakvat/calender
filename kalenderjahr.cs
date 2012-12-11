@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using System.Collections.Generic;
 
 namespace KalenderWelt
@@ -6,27 +8,38 @@ namespace KalenderWelt
     {
         private int _jahr;
         private List<Monat> _monate;
+        private List<Woche> _wochen;
         private List<Tag> _tage;
 
         public KalenderJahr(int dasJahr) 
         {
             _jahr = dasJahr;
             _monate = new List<Monat>();
+            _wochen = new List<Woche>();
             _tage = new List<Tag>();
             int tageImJahr = HilfsKonstrukte.TAGE_IM_JAHR;
             if (IstSchaltjahr()) {
                 ++tageImJahr;
             }
             int wochenTag = StartWochenTag();
+            int wochenNummer = StartWochenNummer();
             int monat = 0;
             int tagImMonat = 0;
+            Woche woche = new Woche(wochenNummer);
             for (int i = 0; i < tageImJahr; ++i)
             {
                 if (tagImMonat == 0) 
                 {
                     _monate.Add(new Monat(monat));
                 }
+                if (wochenTag == 0 && i !=  0) 
+                {
+                    wochenNummer++;
+                    woche = new Woche(wochenNummer);
+                    _wochen.Add(woche);
+                }
                 Tag meinTag = new Tag(tagImMonat+1, wochenTag, i+1);
+                meinTag.SetzeWoche(ref woche);
                 _tage.Add(meinTag);
                 _monate[monat].FuegeTagAn(ref meinTag);
                 wochenTag = (++wochenTag) % HilfsKonstrukte.TAGE_PRO_WOCHE;
@@ -69,6 +82,17 @@ namespace KalenderWelt
             return wochenTag;
         }
 
+        //die erste Kalenderwoche des Jahres ist die, die den 4.1. enthält
+        //Kalenderwochen beginnen mit Montag und enden mit Sonntag
+        public int StartWochenNummer()
+        {
+            int startWochenTag = StartWochenTag();
+            if (startWochenTag < 4) {
+                return 1;
+            }
+            return 0; //eigentlich 52 oder 53 (letzte Woche des Vorjahrs)
+        }
+
         public void TrageEin(ref List<Eintrag> dieEintraege) 
         {
             foreach (Eintrag eintrag in dieEintraege) 
@@ -105,17 +129,20 @@ namespace KalenderWelt
         }
     }
 
-    //TODO
-    //public class Woche
-    //{
-    //    private int _woche;
-    //    private List<Tag> _tage;
+    public class Woche
+    {
+        private int _woche;
 
-    //    public Woche(int dieWoche) 
-    //    {
-    //        _woche = dieWoche;
-    //    }
-    //}
+        public Woche(int dieWoche) 
+        {
+            _woche = dieWoche;
+        }
+
+        public int GibNummer()
+        {
+            return _woche;
+        }
+    }
 
     public class Tag
     {
@@ -124,6 +151,7 @@ namespace KalenderWelt
         private int _tagImJahr;
         private List<Eintrag> _eintraege;
         private List<string> _eintraegeStrings;
+        private Woche _woche;
 
         public Tag(int derIndex, int derWochentag, int derTagImJahr)
         {
@@ -142,6 +170,16 @@ namespace KalenderWelt
         public int GibIndex() 
         {
             return _index;
+        }
+
+        public Woche GibWoche()
+        {
+            return _woche;
+        }
+
+        public void SetzeWoche(ref Woche dieWoche)
+        {
+            _woche = dieWoche;
         }
 
         public void TrageEin(Eintrag derEintrag, string derString)

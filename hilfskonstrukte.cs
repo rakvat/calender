@@ -43,7 +43,7 @@ namespace KalenderWelt
             {"Montag", "Dienstag", "Mittwoch", 
              "Donnerstag", "Freitag", "Samstag", "Sonntag"};
         public static string[] wochenTagNamenKurz = 
-            {"MO", "DI", "MI", "DO", "FR", "SA", "SO"};
+            {"Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"};
         //Schaltjahr wird spaeter korrigiert
         private static int[] tageImMonat = new int[12] 
             { 31, 28, 31, 30,   

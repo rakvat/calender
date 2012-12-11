@@ -22,7 +22,7 @@ namespace KalenderWelt
         private const string MONATS_TITEL = "\\textbf{{\\large{{{0}}}}}\\\\\\\\";
         
         private readonly string[] MONAT_START = {
-            "\\begin{tabular*}{20cm}{|l|l|p{5cm}|l| }",
+            "\\begin{tabular*}{20cm}{|l|l|l|p{5cm}|l| }",
             "\\hline",
             "\\textbf{} & \\textbf{} & \\textbf{} & \\textbf{...}\\\\",
             "\\hline",
@@ -34,7 +34,7 @@ namespace KalenderWelt
             "\\newpage"
             };
 
-        private const string ZEILE = "{0} & \\textbf{{{1}}} & \\tiny{{{2}}} & \\\\ \\hline";
+        private const string ZEILE = "{0} & {1} & \\textbf{{{2}}} & \\tiny{{{3}}} & \\\\ \\hline";
         private const string WOCHENENDE = "\\hline";
 
         public LatexTageszeilenAusgabe(ref KalenderJahr dasJahr)
@@ -60,11 +60,13 @@ namespace KalenderWelt
                     int wochentag = tag.GibWochentag();
                     string wochentagString = 
                         HilfsKonstrukte.wochenTagNamenKurz[wochentag];
+
+                    string wochenNummerString = tag.GibWoche().GibNummer().ToString();
                     string tagString = tag.GibIndex().ToString();
                     string eintraegeString = 
                         ersetzeFuerLatex(tag.EintraegeAlsString());
                     
-                    gibZeileAus(String.Format(ZEILE, wochentagString, tagString, eintraegeString));
+                    gibZeileAus(String.Format(ZEILE, wochenNummerString, wochentagString, tagString, eintraegeString));
                     if (wochentag == 6)
                     {
                         gibZeileAus(WOCHENENDE);
