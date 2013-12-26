@@ -1,6 +1,13 @@
 c# calender project
 we try to make it work for linux and windows
 
+linux
+---------
+sudo aptitude install mono-gmcs nunit
+make
+make start
+
+
 latex-Ausgabe-Format (linux)
 ---------------------------
 (Ausgabemodus 5)
