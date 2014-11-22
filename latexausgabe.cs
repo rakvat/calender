@@ -17,7 +17,7 @@ namespace KalenderWelt
             ""
             };
         private const string ENDE = "\\end{document}";
-        private const string JAHR = "\\textbf{{\\huge{{Kalender f\"ur das Jahr {0}}}}}\\\\\\\\";
+        private const string JAHR = "\\textbf{{\\huge{{Kalender f\\\"ur das Jahr {0}}}}}\\\\\\\\";
 
         private const string MONATS_TITEL = "\\textbf{{\\large{{{0}}}}}\\\\\\\\";
         
@@ -88,7 +88,9 @@ namespace KalenderWelt
                              Replace("Ö","\\\"O").
                              Replace("Ü","\\\"U").
                              Replace("ß","\\\"s").
-                             Replace("_","\\_");
+                             Replace("_","\\_").
+                             Replace("á","\\'{a}").
+                             Replace("ú","\\'{u}");
         }
     }
 }
